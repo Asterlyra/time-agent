@@ -1,0 +1,98 @@
+{
+  "binary_sha256": "0c09e45bc76433756eb2d492f6db0ce6f269967e6618f4a6ae73e2fa239694b8",
+  "budget_s": 120,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.006411400041543,
+        2.006313699996099,
+        2.006263400078751
+      ],
+      "lookup_rows": [
+        2.0064686000114307,
+        2.0064419999253005,
+        2.0064243000233546
+      ],
+      "read_document": [
+        2.0064985000062734,
+        2.006487000035122,
+        2.0064755000639707
+      ],
+      "search": [
+        2.006572899990715,
+        2.0065311000216752,
+        2.006508899969049
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.011572999996133,
+        15.011539299972355,
+        15.011517000035383
+      ],
+      "lookup_rows": [
+        15.011607500026003,
+        15.01159559993539,
+        15.011586599983275
+      ],
+      "read_document": [
+        15.011620400007814,
+        15.011616199975833,
+        15.011612000060268
+      ],
+      "search": [
+        15.011631199973635,
+        15.01163079997059,
+        15.011625300045125
+      ]
+    }
+  },
+  "calibration_note": "separate concurrent measurements per tool outside episodes",
+  "code_hash": "ee960988ecb11155ed6b11ffba8608b0192bfa77a3234f6abd8fe1d0831c5771",
+  "concurrency": 1,
+  "estimated_cost": null,
+  "fast_s": 2,
+  "isolation": "candidate MXC, no independent end-to-end isolation proof",
+  "manifest_hash": "a4f275cd4d1a268e7806ba1717e163645a2d468bd95a4575b162ae395c23f263",
+  "manifest_seed": 4125,
+  "model": "gpt-6-luna",
+  "purpose": "exploratory v3 development; not formal",
+  "repeats": 1,
+  "shift_fraction": 0.3,
+  "slow_s": 15,
+  "task_hash": "3742ac0f4f02fc56da9957e9fc6ec78df8eead0c3440d4a955aeb2ba11df1b2b",
+  "timing": "CLI terminal event timing is conservative and requires validation",
+  "token_usage": null,
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  }
+}

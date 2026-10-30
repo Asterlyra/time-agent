@@ -1,0 +1,76 @@
+{
+  "binary_sha256": "0c09e45bc76433756eb2d492f6db0ce6f269967e6618f4a6ae73e2fa239694b8",
+  "budget_s": 120,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.0010895000305027,
+        2.0010214999783784,
+        2.000999700045213
+      ],
+      "lookup_rows": [
+        2.00112110003829,
+        2.0011069999309257,
+        2.001096299965866
+      ],
+      "read_document": [
+        2.0011375999310985,
+        2.001127399969846,
+        2.0011236000573263
+      ],
+      "search": [
+        2.0011776000028476,
+        2.0011512000346556,
+        2.001142599969171
+      ]
+    }
+  },
+  "calibration_note": "separate concurrent measurements per tool outside episodes",
+  "code_hash": "b8e28535d6e79b0bedc33ba8e2abdf2506be850d1a455b1b8d7d1d8b64dad737",
+  "concurrency": 1,
+  "estimated_cost": null,
+  "fast_s": 2,
+  "isolation": "candidate MXC, no independent end-to-end isolation proof",
+  "manifest_hash": "1df70a328374038c8b78f6a83c0f9d70d631215e30c360d5b87c6afb02e9c6e5",
+  "manifest_seed": 4125,
+  "model": "gpt-6-luna",
+  "purpose": "exploratory v4 development; not formal",
+  "repeats": 1,
+  "shift_fraction": 0.3,
+  "slow_s": 15,
+  "task_hash": "39e306b936cd3790dd321326171d8368bdf9c5eea6a8aef8fc0c31b7a6a980e6",
+  "timing": "CLI terminal event timing is conservative and requires validation",
+  "token_usage": null,
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  }
+}
