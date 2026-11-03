@@ -22,6 +22,7 @@ def main():
     if not args.skip_stats:
         run('.venv/bin/python', '-m', 'scripts.study3_stats', str(batch))
         run('.venv/bin/python', '-m', 'scripts.study3_latency', str(batch))
+        run('.venv/bin/python', '-m', 'scripts.study3_decisions', str(batch))
     run('.venv/bin/python', '-m', 'scripts.paper_results_section_s3', str(summary))
     run('.venv/bin/python', '-m', 'scripts.paper_figures', '--s1',
         '--s2-batch', str(ROOT / 'runs' / 's2-formal-20261102T035658599154Z'),

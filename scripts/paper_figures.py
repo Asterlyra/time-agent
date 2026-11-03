@@ -186,6 +186,7 @@ def main():
     if args.s3_batch:
         made.append(s3_arm_figure(args.s3_batch))
         made.append(s3_termination_figure(args.s3_batch))
+        made.append(s3_decision_figure(Path(args.s3_batch) / 'decisions.json'))
     if args.s3_summary:
         made.append(s3_regime_figure(args.s3_summary))
     print('\n'.join(str(p) for p in made))
@@ -317,7 +318,40 @@ def s3_termination_figure(batch, out='fig7_s3_termination.png'):
     return save(fig, out)
 
 
-def s3_regime_figure(summary_path, out='fig8_s3_regime.png'):
+def s3_decision_figure(decisions_path, out='fig8_s3_decisions.png'):
+    """Where in the budget the agent chooses to start a call.
+
+    Left: the informational arm against the unguarded one — if the number did
+    anything, these two curves would separate. Right: the same decisions under a
+    rule, which never start a call the reserve cannot pay for.
+    """
+    data = json.loads(Path(decisions_path).read_text())['hetero']
+    edges = np.arange(0, 225, 15)
+    centres = (edges[:-1] + edges[1:]) / 2
+    fig, axes = plt.subplots(1, 2, figsize=(9.2, 3.2), sharey=True)
+    panels = (('I0', ['I1'], 'what the number changed: nothing'),
+              ('I0', ['E'], 'what the rule changed: no call in the tail'))
+    for ax, (base, others, title) in zip(axes, panels):
+        total = sum(data[base]['histogram_15s']) or 1
+        ax.step(edges, [0] + [v / total for v in data[base]['histogram_15s']],
+                where='post', color=S3_ARM[base], lw=2, label=f'{base} (no information)')
+        for arm in others:
+            t = sum(data[arm]['histogram_15s']) or 1
+            ax.step(edges, [0] + [v / t for v in data[arm]['histogram_15s']], where='post',
+                    color=S3_ARM[arm], lw=2, label=f'{arm}')
+        ax.axvspan(0, 30, color='#d9534f', alpha=.08, lw=0)
+        ax.set_xlim(0, 210)
+        ax.set_xlabel('seconds left in the budget when the call was started', fontsize=8)
+        ax.set_title(title, fontsize=10)
+        ax.grid(alpha=.3)
+        ax.legend(fontsize=8, frameon=False)
+    axes[0].set_ylabel('share of calls per 15 s bin')
+    fig.suptitle('Study 3, heterogeneous family: the decision, and the rule', fontsize=11)
+    fig.tight_layout(rect=(0, 0, 1, .93))
+    return save(fig, out)
+
+
+def s3_regime_figure(summary_path, out='fig9_s3_regime.png'):
     summary = json.loads(Path(summary_path).read_text())
     regimes = ('light_tail', 'fast_heavy', 'slow_heavy', 'drift_heavy')
     fig, ax = plt.subplots(figsize=(6.6, 3.2))

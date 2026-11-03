@@ -54,6 +54,9 @@ def main():
 
     primary = summary['primary']
     pm = primary['per_model']
+    lines.append('![Points banked by arm](figures/fig6_s3_arms.png)\n')
+    lines.append('**Figure 6.** Study 3, points banked by arm, in the uniform and heterogeneous families; '
+                 'bars are means with 95% normal-approximation intervals over episodes.\n')
     lines.append(f"**Primary contrast.** In the heterogeneous family, the equal-weight E−I0 difference "
                  f"was {num(primary['pooled'])} points, 95% cluster-bootstrap CI "
                  f"[{primary['ci'][0]:+.2f}, {primary['ci'][1]:+.2f}], sign-flip p = "
@@ -122,27 +125,66 @@ def main():
     else:
         same = ("almost exactly the same calls, so the policy did not change what the agent did, only how "
                 "often the doing was cut off. ")
-    lines.append(
-        f"**Information versus control.** Giving the agent more information {moved} "
-        f"(I1−I0 = {num(i1_i0['pooled'])} [{i1_i0['ci'][0]:+.2f}, {i1_i0['ci'][1]:+.2f}]). The information "
-        f"arm displayed the per-size cost estimates and the agent's own median request latency — a number "
-        f"the model cannot observe directly — and the agents went on making " + same +
-        f"What changed was the ending. This is the same finding as Study 2, where the declared estimate "
-        f"improved while the operative one did not, now in an environment where the costs are stochastic "
-        f"and the item values differ.{light_txt}\n")
-    lines.append(f"**Enforcement, not information.** The harness-chosen reserve E beat the "
-                 f"no-enforcement baseline by {num(e_i0['pooled'])} points "
-                 f"[{e_i0['ci'][0]:+.2f}, {e_i0['ci'][1]:+.2f}]. A reserve the *agent* declared, then "
-                 f"mechanically enforced by the same code, did just as well "
-                 f"({num(c_i0['pooled'])}, [{c_i0['ci'][0]:+.2f}, {c_i0['ci'][1]:+.2f}]); the difference "
-                 f"between the two is {num(c_e['pooled'])} "
-                 f"[{c_e['ci'][0]:+.2f}, {c_e['ci'][1]:+.2f}]. What separates both from the informational "
-                 f"arms is therefore not who chooses the number but whether anything acts on it. Even a "
-                 f"perfect cost model buys little once the reserve is enforced: O trails E by "
-                 f"{num(e_o['pooled'])} [{e_o['ci'][0]:+.2f}, {e_o['ci'][1]:+.2f}].\n")
+    enforce_text = (f"**Enforcement, not information.** A reserve the harness computes and enforces beat "
+                    f"the unguarded baseline by {num(e_i0['pooled'])} points "
+                    f"[{e_i0['ci'][0]:+.2f}, {e_i0['ci'][1]:+.2f}] (Figure 6; Table 8 collects every "
+                    f"pre-registered contrast). A reserve the *agent* declared, then mechanically enforced "
+                    f"by the same code, did just as well ({num(c_i0['pooled'])}, "
+                    f"[{c_i0['ci'][0]:+.2f}, {c_i0['ci'][1]:+.2f}]); the difference between the two is "
+                    f"{num(c_e['pooled'])} [{c_e['ci'][0]:+.2f}, {c_e['ci'][1]:+.2f}]: indistinguishable. "
+                    f"What separates "
+                    f"both from the informational arms is therefore not who chooses the number but whether "
+                    f"anything acts on it. Even a perfect cost model buys little once the reserve is "
+                    f"enforced: O trails E by {num(e_o['pooled'])} "
+                    f"[{e_o['ci'][0]:+.2f}, {e_o['ci'][1]:+.2f}]. The mechanism is visible in how episodes "
+                    f"end (Figure 7): in `I0` and `I1` most failures are episodes still waiting on a call "
+                    f"when the budget ran out, while under `C`, `E` and `O` the harness submits whatever is "
+                    f"in hand before the deadline.\n")
+
+    info_text = (f"**Information without a rule.** Giving the agent the numbers does not do this. Full "
+                 f"information {moved} (I1−I0 = {num(i1_i0['pooled'])} "
+                 f"[{i1_i0['ci'][0]:+.2f}, {i1_i0['ci'][1]:+.2f}]). The arm displayed the per-size cost "
+                 f"estimates and the agent's own median request latency — a number the model cannot observe "
+                 f"directly — and the agents went on making " + same +
+                 f"What changed was the ending, not the calls: the same information that leaves the count "
+                 f"and the items alone costs several points, because a number that has to be read inside "
+                 f"the loop is paid for inside the loop. This is the Study 2 finding again — the declared "
+                 f"estimate improved while the operative one did not — now with stochastic costs and "
+                 f"differing item values.\n")
+
+    lines.append(enforce_text)
+    lines.append('![How episodes end](figures/fig7_s3_termination.png)\n')
+    lines.append('**Figure 7.** Study 3, how episodes end in the heterogeneous family. `I0` and `I1` mostly '
+                 'die inside a call or a request; under `C`, `E` and `O` the harness submits whatever is in '
+                 'hand before the budget expires.\n')
+    lines.append(info_text)
 
     def cell(family, arm, model):
         return model_cells.get(f'{family}|{arm}|{model}')
+
+    decisions_path = Path(args.summary).with_name('decisions.json')
+    decisions = json.loads(decisions_path.read_text()).get('hetero', {}) if decisions_path.exists() else {}
+    d0, d1, de = (decisions.get(a) for a in ('I0', 'I1', 'E'))
+    if d0 and d1 and de and d0.get('median_remaining_at_start_s'):
+        lines.append(
+            f"**The decision itself.** Figure 8 reads the moment a call is started off every episode. "
+            f"If the informational arm changed what the agent does, its calls would sit further from the "
+            f"deadline than the unguarded arm's. They do not: the median call in `I1` starts with "
+            f"{d1['median_remaining_at_start_s']:.1f} s left, against {d0['median_remaining_at_start_s']:.1f} s "
+            f"in `I0`, and the two arms make {d1['calls_per_episode']:.2f} and "
+            f"{d0['calls_per_episode']:.2f} calls per episode. Measured against the model's own request "
+            f"distribution, the share of calls started on a budget too short to pay for a typical slow "
+            f"request is {d1['share_started_below_own_p90']:.1%} in `I1` and "
+            f"{d0['share_started_below_own_p90']:.1%} in `I0` — the number arrives and changes neither the "
+            f"count nor the timing of the decisions. Under enforcement the same decisions are made and then "
+            f"refused before it can kill the episode: {de['share_started_below_own_p90']:.1%} of `E` calls "
+            f"start on such a budget, because a call the reserve cannot pay for is never admitted. The gain "
+            f"is not a change in judgement but a change in what is allowed to reach execution.\n")
+        lines.append('![Where calls are started](figures/fig8_s3_decisions.png)\n')
+        lines.append('**Figure 8.** Where in the budget a call is started, heterogeneous family. (a) The '
+                     'informational arm `I1` against the unguarded baseline `I0`: the same distribution, '
+                     'bin for bin. (b) The same baseline against the enforced reserve `E`, which never '
+                     'starts a call in the shaded last 30 s.\n')
 
     regime_rows = {c['regime']: c for c in contrasts
                    if c['family'] == 'hetero' and c['contrast'] == 'E-I0' and c['regime'] != 'all'}
@@ -170,6 +212,10 @@ def main():
         else:
             text += '.\n'
         lines.append(text)
+        lines.append('![Enforcement by regime](figures/fig9_s3_regime.png)\n')
+        lines.append('**Figure 9.** Study 3, the E−I0 difference by tool-cost regime, uniform and '
+                     'heterogeneous families. The gain is not smaller where call durations are nearly '
+                     'deterministic.\n')
 
     if all(cell('hetero', 'I0', m) and cell('hetero', 'E', m) for m in MODELS):
         lines.append('### 5.5 Who benefits from enforcement\n')
