@@ -40,6 +40,7 @@ def main():
     gaps = defaultdict(list)
     arm_calls = defaultdict(list)
     arm_items = defaultdict(list)
+    arm_requests = defaultdict(list)
     episodes = defaultdict(int)
     unguarded = defaultdict(int)
     killed = defaultdict(int)
@@ -57,6 +58,11 @@ def main():
         calls = 0
         fetched = set()
         for event in result['events']:
+            if event.get('event_type') == 'model_request':
+                end, start_ = event.get('response_end_offset_s'), event.get('request_start_offset_s')
+                if end is not None and start_ is not None and 0 <= end - start_ < 600:
+                    arm_requests[meta['condition']].append(end - start_)
+                continue
             if event.get('event_type') != 'tool':
                 continue
             start = event.get('tool_start_offset_s')
@@ -78,10 +84,16 @@ def main():
 
     arms = {}
     for arm, values in arm_calls.items():
+        requests = arm_requests.get(arm, [])
         arms[arm] = {
             'episodes': len(values),
             'mean_calls': sum(values) / len(values),
             'mean_items_fetched': sum(arm_items[arm]) / len(arm_items[arm]),
+            'requests': len(requests),
+            'request_p50': quantile(requests, 0.50),
+            'request_p90': quantile(requests, 0.90),
+            'request_p99': quantile(requests, 0.99),
+            'request_mean': (sum(requests) / len(requests)) if requests else None,
         }
     out = {'family': args.family, 'arms': arms, 'models': {}}
     for model in MODELS:

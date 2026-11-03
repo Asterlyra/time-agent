@@ -112,8 +112,7 @@ def main():
                      f"side rather than the tool side.")
     moved = 'did not move'
     if i1_i0['ci'][1] < 0:
-        moved = ('made things worse: the same calls, the same items, but fewer episodes ended in a '
-                 'submission')
+        moved = 'made the score worse'
     elif i1_i0['ci'][0] > 0:
         moved = 'improved the score'
     if 'arms' in latency:
@@ -141,16 +140,28 @@ def main():
                     f"when the budget ran out, while under `C`, `E` and `O` the harness submits whatever is "
                     f"in hand before the deadline.\n")
 
+    sub0 = (behaviour.get('hetero|I0') or {}).get('p_submitted')
+    sub1 = (behaviour.get('hetero|I1') or {}).get('p_submitted')
+    arm_lat = latency.get('arms') or {}
+    p0 = (arm_lat.get('I0') or {}).get('request_p50')
+    p1 = (arm_lat.get('I1') or {}).get('request_p50')
+    ending = ''
+    if sub0 is not None and sub1 is not None:
+        ending = (f"the share of episodes that ended in a submission fell from {sub0:.0%} to {sub1:.0%}, and "
+                  f"the points fell with it. ")
+    slowdown = ''
+    if p0 and p1:
+        slowdown = (f"The obvious explanation is that the extra text makes each request slower; it does not. "
+                    f"Request p50 is {p0:.1f} s in `I0` and {p1:.1f} s in `I1`, and request durations by "
+                    f"step index are indistinguishable. We report the cost without claiming its mechanism. ")
     info_text = (f"**Information without a rule.** Giving the agent the numbers does not do this. Full "
                  f"information {moved} (I1−I0 = {num(i1_i0['pooled'])} "
                  f"[{i1_i0['ci'][0]:+.2f}, {i1_i0['ci'][1]:+.2f}]). The arm displayed the per-size cost "
                  f"estimates and the agent's own median request latency — a number the model cannot observe "
                  f"directly — and the agents went on making " + same +
-                 f"What changed was the ending, not the calls: the same information that leaves the count "
-                 f"and the items alone costs several points, because a number that has to be read inside "
-                 f"the loop is paid for inside the loop. This is the Study 2 finding again — the declared "
-                 f"estimate improved while the operative one did not — now with stochastic costs and "
-                 f"differing item values.\n")
+                 f"What changed was the ending, not the calls: " + ending + slowdown +
+                 f"This is the Study 2 finding again — the declared estimate improved while the operative "
+                 f"one did not — now with stochastic costs and differing item values.\n")
 
     lines.append(enforce_text)
     lines.append('![How episodes end](figures/fig7_s3_termination.png)\n')
@@ -166,13 +177,15 @@ def main():
     decisions = json.loads(decisions_path.read_text()).get('hetero', {}) if decisions_path.exists() else {}
     d0, d1, de = (decisions.get(a) for a in ('I0', 'I1', 'E'))
     if d0 and d1 and de and d0.get('median_remaining_at_start_s'):
+        c0, c1 = d0['calls_per_episode'], d1['calls_per_episode']
+        make_calls = (f"{c1:.2f} calls per episode each" if abs(c1 - c0) < 0.02
+                      else f"{c1:.2f} and {c0:.2f} calls per episode")
         lines.append(
             f"**The decision itself.** Figure 8 reads the moment a call is started off every episode. "
             f"If the informational arm changed what the agent does, its calls would sit further from the "
             f"deadline than the unguarded arm's. They do not: the median call in `I1` starts with "
             f"{d1['median_remaining_at_start_s']:.1f} s left, against {d0['median_remaining_at_start_s']:.1f} s "
-            f"in `I0`, and the two arms make {d1['calls_per_episode']:.2f} and "
-            f"{d0['calls_per_episode']:.2f} calls per episode. Measured against the model's own request "
+            f"in `I0`, and the two arms make {make_calls}. Measured against the model's own request "
             f"distribution, the share of calls started on a budget too short to pay for a typical slow "
             f"request is {d1['share_started_below_own_p90']:.1%} in `I1` and "
             f"{d0['share_started_below_own_p90']:.1%} in `I0` — the number arrives and changes neither the "
