@@ -66,10 +66,14 @@ def main():
     claim = (f"that what changes deadline behaviour is enforcement rather than information: a "
              f"mechanically enforced reserve gains {fmt(e_i0['pooled'])} points while the same "
              f"information given to the agent {info_phrase(i1_i0, short=True)}")
+    done = s['n_episodes']
+    counts = {'[S3 EPISODES]': f'{done:,}', '[S3 DONE]': f'{done:,}',
+              '[TOTAL EPISODES]': f'{1512 + done:,}'}
+
     paper = Path(args.paper)
     text = paper.read_text()
     for token, value in (('[S3 ABSTRACT RESULT]', abstract), ('[S3 SUMMARY]', summary),
-                         ('[S3 CLAIM]', claim)):
+                         ('[S3 CLAIM]', claim), *counts.items()):
         if token in text:
             text = text.replace(token, value)
     paper.write_text(text)

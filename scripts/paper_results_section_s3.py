@@ -202,7 +202,7 @@ def main():
                          f"{num(gains[fastest])}: there is nothing to protect. {SHORT[slowest]} is the "
                          f"opposite — {by_model[slowest]['p50']:.1f} s per request, "
                          f"{by_model[slowest]['unguarded_death_rate']:.0%} of unguarded episodes die — yet it "
-                         f"gains only {num(gains[slowest])}, because a dying episode had banked just "
+                         f"gains only {num(gains[slowest])}, because a dying episode had fetched just "
                          f"{by_model[slowest]['items_in_hand_at_death']:.1f} items. Enforcement converts work "
                          f"already done into points; where the model never gets far enough for that work to "
                          f"exist, the harness has nothing to save. The largest gains sit in between, at "
