@@ -1,0 +1,1239 @@
+{
+  "manifest": {
+    "condition": "C",
+    "data_seed": 4207,
+    "model_id": "glm-5.3-flash",
+    "profile": "slow_to_fast",
+    "repeat": 1,
+    "run_id": "435b89f00db012a276d05a91",
+    "task_family": "table",
+    "task_id": "test-table-07",
+    "template_id": "table-max_line"
+  },
+  "result": {
+    "budget_s": 150,
+    "clock": {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "guard_interval_s": 0.25,
+      "includes_suspend": true,
+      "platform": "darwin",
+      "protocol": "continuous_deadline_v1",
+      "resolution_s": 4.2000000000000006e-08,
+      "suspend_threshold_s": 1.0
+    },
+    "condition": "C",
+    "deadline_success": false,
+    "elapsed_s": 43.53188791699358,
+    "end_utc": "2026-10-31T06:21:16.747916+00:00",
+    "events": [
+      {
+        "action": {
+          "arguments": {
+            "filters": {
+              "category": "active"
+            },
+            "table": "products"
+          },
+          "name": "lookup_rows",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 1.5226426669978537,
+              "response_bytes": 10035,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 42,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.000137,
+                "billed_tokens": {
+                  "cache_read": 0,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 610,
+                  "output": 91,
+                  "reasoning": 66
+                },
+                "billing_source": "go",
+                "completion_tokens": 91,
+                "cost": 0,
+                "list_cost": 0.000137,
+                "prompt_tokens": 610,
+                "total_tokens": 701
+              }
+            },
+            "observation": {
+              "calibration_samples_s": {
+                "calculate": [
+                  15.002559333996032,
+                  15.00258762500016,
+                  15.002605583998957
+                ],
+                "lookup_rows": [
+                  15.002568208001321,
+                  15.002603416003694,
+                  15.002623166998092
+                ]
+              },
+              "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+              "duration_reference_s": {
+                "calculate": 15.002584180998383,
+                "lookup_rows": 15.002598263667702
+              },
+              "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+              "time_status": {
+                "budget_s": 150,
+                "elapsed_s": 0.0001912079897010699,
+                "remaining_s": 149.9998087920103
+              },
+              "tools": {
+                "calculate": {
+                  "arguments": {
+                    "expression": "算式字符串"
+                  },
+                  "description": "计算仅含数字和 + - * / 的表达式"
+                },
+                "lookup_rows": {
+                  "arguments": {
+                    "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                    "filters": "字段与值组成的对象",
+                    "table": "products 或 batches"
+                  },
+                  "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+                }
+              }
+            },
+            "request_start_offset_s": 0.00023304199567064643,
+            "response_end_offset_s": 2.900343332992634,
+            "time_feedback_sample_offset_s": 0.0001912079897010699
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "calibration_samples_s": {
+            "calculate": [
+              15.002559333996032,
+              15.00258762500016,
+              15.002605583998957
+            ],
+            "lookup_rows": [
+              15.002568208001321,
+              15.002603416003694,
+              15.002623166998092
+            ]
+          },
+          "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+          "duration_reference_s": {
+            "calculate": 15.002584180998383,
+            "lookup_rows": 15.002598263667702
+          },
+          "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+          "time_status": {
+            "budget_s": 150,
+            "elapsed_s": 0.0001912079897010699,
+            "remaining_s": 149.9998087920103
+          },
+          "tools": {
+            "calculate": {
+              "arguments": {
+                "expression": "算式字符串"
+              },
+              "description": "计算仅含数字和 + - * / 的表达式"
+            },
+            "lookup_rows": {
+              "arguments": {
+                "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                "filters": "字段与值组成的对象",
+                "table": "products 或 batches"
+              },
+              "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+            }
+          }
+        },
+        "reference_sample_counts": {
+          "calculate": 3,
+          "lookup_rows": 3
+        },
+        "remaining_at_request_s": 149.9998087920103,
+        "request_start_offset_s": 0.00021025000023655593,
+        "response_end_offset_s": 2.900343332992634,
+        "retry_count": 0,
+        "step_index": 0,
+        "time_feedback_sample_offset_s": 0.0001912079897010699,
+        "visible_history": []
+      },
+      {
+        "event_type": "tool",
+        "injected_target_s": 15,
+        "is_censored": false,
+        "observed_duration_s": 15.0015752499894,
+        "step_index": 0,
+        "tool_arguments": {
+          "filters": {
+            "category": "active"
+          },
+          "table": "products"
+        },
+        "tool_end_offset_s": 17.903263332991628,
+        "tool_name": "lookup_rows",
+        "tool_result": {
+          "next_cursor": 2,
+          "rows": [
+            {
+              "category": "active",
+              "id": "R51475",
+              "product": "货26030",
+              "unit_cost": 4
+            },
+            {
+              "category": "active",
+              "id": "R69083",
+              "product": "货41166",
+              "unit_cost": 6
+            }
+          ]
+        },
+        "tool_start_offset_s": 2.9016880830022274
+      },
+      {
+        "action": {
+          "arguments": {
+            "cursor": 2,
+            "filters": {
+              "category": "active"
+            },
+            "table": "products"
+          },
+          "name": "lookup_rows",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 2.170393166001304,
+              "response_bytes": 48729,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 204,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00031045,
+                "billed_tokens": {
+                  "cache_read": 0,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 733,
+                  "output": 401,
+                  "reasoning": 373
+                },
+                "billing_source": "go",
+                "completion_tokens": 401,
+                "cost": 0,
+                "list_cost": 0.00031045,
+                "prompt_tokens": 733,
+                "total_tokens": 1134
+              }
+            },
+            "observation": {
+              "calibration_samples_s": {
+                "calculate": [
+                  15.002559333996032,
+                  15.00258762500016,
+                  15.002605583998957
+                ],
+                "lookup_rows": [
+                  15.002568208001321,
+                  15.002603416003694,
+                  15.002623166998092
+                ]
+              },
+              "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+              "duration_reference_s": {
+                "calculate": 15.002584180998383,
+                "lookup_rows": 15.0015752499894
+              },
+              "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+              "time_status": {
+                "budget_s": 150,
+                "elapsed_s": 17.904417249999824,
+                "remaining_s": 132.09558275000018
+              },
+              "tools": {
+                "calculate": {
+                  "arguments": {
+                    "expression": "算式字符串"
+                  },
+                  "description": "计算仅含数字和 + - * / 的表达式"
+                },
+                "lookup_rows": {
+                  "arguments": {
+                    "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                    "filters": "字段与值组成的对象",
+                    "table": "products 或 batches"
+                  },
+                  "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+                }
+              }
+            },
+            "request_start_offset_s": 17.90458404200035,
+            "response_end_offset_s": 26.704681125003844,
+            "time_feedback_sample_offset_s": 17.904417249999824
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "calibration_samples_s": {
+            "calculate": [
+              15.002559333996032,
+              15.00258762500016,
+              15.002605583998957
+            ],
+            "lookup_rows": [
+              15.002568208001321,
+              15.002603416003694,
+              15.002623166998092
+            ]
+          },
+          "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+          "duration_reference_s": {
+            "calculate": 15.002584180998383,
+            "lookup_rows": 15.0015752499894
+          },
+          "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+          "time_status": {
+            "budget_s": 150,
+            "elapsed_s": 17.904417249999824,
+            "remaining_s": 132.09558275000018
+          },
+          "tools": {
+            "calculate": {
+              "arguments": {
+                "expression": "算式字符串"
+              },
+              "description": "计算仅含数字和 + - * / 的表达式"
+            },
+            "lookup_rows": {
+              "arguments": {
+                "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                "filters": "字段与值组成的对象",
+                "table": "products 或 batches"
+              },
+              "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+            }
+          }
+        },
+        "reference_sample_counts": {
+          "calculate": 3,
+          "lookup_rows": 1
+        },
+        "remaining_at_request_s": 132.09558275000018,
+        "request_start_offset_s": 17.904476625000825,
+        "response_end_offset_s": 26.704681125003844,
+        "retry_count": 0,
+        "step_index": 1,
+        "time_feedback_sample_offset_s": 17.904417249999824,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 15.0015752499894,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R51475",
+                  "product": "货26030",
+                  "unit_cost": 4
+                },
+                {
+                  "category": "active",
+                  "id": "R69083",
+                  "product": "货41166",
+                  "unit_cost": 6
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "event_type": "tool",
+        "injected_target_s": 2,
+        "is_censored": false,
+        "observed_duration_s": 2.0023118750104913,
+        "step_index": 1,
+        "tool_arguments": {
+          "cursor": 2,
+          "filters": {
+            "category": "active"
+          },
+          "table": "products"
+        },
+        "tool_end_offset_s": 28.708537625003373,
+        "tool_name": "lookup_rows",
+        "tool_result": {
+          "next_cursor": null,
+          "rows": [
+            {
+              "category": "active",
+              "id": "R54576",
+              "product": "货71387",
+              "unit_cost": 13
+            },
+            {
+              "category": "active",
+              "id": "R12851",
+              "product": "货68268",
+              "unit_cost": 17
+            }
+          ]
+        },
+        "tool_start_offset_s": 26.706225749992882
+      },
+      {
+        "action": {
+          "arguments": {
+            "filters": {
+              "status": "shipped"
+            },
+            "table": "batches"
+          },
+          "name": "lookup_rows",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 1.4934418330085464,
+              "response_bytes": 8777,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 37,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.0001729,
+                "billed_tokens": {
+                  "cache_read": 0,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 866,
+                  "output": 86,
+                  "reasoning": 59
+                },
+                "billing_source": "go",
+                "completion_tokens": 86,
+                "cost": 0,
+                "list_cost": 0.0001729,
+                "prompt_tokens": 866,
+                "total_tokens": 952
+              }
+            },
+            "observation": {
+              "calibration_samples_s": {
+                "calculate": [
+                  15.002559333996032,
+                  15.00258762500016,
+                  15.002605583998957
+                ],
+                "lookup_rows": [
+                  15.002568208001321,
+                  15.002603416003694,
+                  15.002623166998092
+                ]
+              },
+              "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+              "duration_reference_s": {
+                "calculate": 15.002584180998383,
+                "lookup_rows": 8.501943562499946
+              },
+              "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+              "time_status": {
+                "budget_s": 150,
+                "elapsed_s": 28.709798333002254,
+                "remaining_s": 121.29020166699775
+              },
+              "tools": {
+                "calculate": {
+                  "arguments": {
+                    "expression": "算式字符串"
+                  },
+                  "description": "计算仅含数字和 + - * / 的表达式"
+                },
+                "lookup_rows": {
+                  "arguments": {
+                    "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                    "filters": "字段与值组成的对象",
+                    "table": "products 或 batches"
+                  },
+                  "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+                }
+              }
+            },
+            "request_start_offset_s": 28.71001433300262,
+            "response_end_offset_s": 31.147207082991372,
+            "time_feedback_sample_offset_s": 28.709798333002254
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "calibration_samples_s": {
+            "calculate": [
+              15.002559333996032,
+              15.00258762500016,
+              15.002605583998957
+            ],
+            "lookup_rows": [
+              15.002568208001321,
+              15.002603416003694,
+              15.002623166998092
+            ]
+          },
+          "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+          "duration_reference_s": {
+            "calculate": 15.002584180998383,
+            "lookup_rows": 8.501943562499946
+          },
+          "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+          "time_status": {
+            "budget_s": 150,
+            "elapsed_s": 28.709798333002254,
+            "remaining_s": 121.29020166699775
+          },
+          "tools": {
+            "calculate": {
+              "arguments": {
+                "expression": "算式字符串"
+              },
+              "description": "计算仅含数字和 + - * / 的表达式"
+            },
+            "lookup_rows": {
+              "arguments": {
+                "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                "filters": "字段与值组成的对象",
+                "table": "products 或 batches"
+              },
+              "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+            }
+          }
+        },
+        "reference_sample_counts": {
+          "calculate": 3,
+          "lookup_rows": 2
+        },
+        "remaining_at_request_s": 121.29020166699775,
+        "request_start_offset_s": 28.709860000002664,
+        "response_end_offset_s": 31.147207082991372,
+        "retry_count": 0,
+        "step_index": 2,
+        "time_feedback_sample_offset_s": 28.709798333002254,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 15.0015752499894,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R51475",
+                  "product": "货26030",
+                  "unit_cost": 4
+                },
+                {
+                  "category": "active",
+                  "id": "R69083",
+                  "product": "货41166",
+                  "unit_cost": 6
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "cursor": 2,
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0023118750104913,
+            "tool_result": {
+              "next_cursor": null,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R54576",
+                  "product": "货71387",
+                  "unit_cost": 13
+                },
+                {
+                  "category": "active",
+                  "id": "R12851",
+                  "product": "货68268",
+                  "unit_cost": 17
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "event_type": "tool",
+        "injected_target_s": 2,
+        "is_censored": false,
+        "observed_duration_s": 2.0007978750072652,
+        "step_index": 2,
+        "tool_arguments": {
+          "filters": {
+            "status": "shipped"
+          },
+          "table": "batches"
+        },
+        "tool_end_offset_s": 33.14928733299894,
+        "tool_name": "lookup_rows",
+        "tool_result": {
+          "next_cursor": 2,
+          "rows": [
+            {
+              "discount": 1,
+              "freight": 1,
+              "id": "R60714",
+              "product": "货26030",
+              "quantity": 8,
+              "status": "shipped"
+            },
+            {
+              "discount": 3,
+              "freight": 5,
+              "id": "R95667",
+              "product": "货71387",
+              "quantity": 10,
+              "status": "shipped"
+            }
+          ]
+        },
+        "tool_start_offset_s": 31.148489457991673
+      },
+      {
+        "action": {
+          "arguments": {
+            "cursor": 2,
+            "filters": {
+              "status": "shipped"
+            },
+            "table": "batches"
+          },
+          "name": "lookup_rows",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 2.7784605839988217,
+              "response_bytes": 9746,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 41,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00020085,
+                "billed_tokens": {
+                  "cache_read": 0,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 1019,
+                  "output": 96,
+                  "reasoning": 66
+                },
+                "billing_source": "go",
+                "completion_tokens": 96,
+                "cost": 0,
+                "list_cost": 0.00020085,
+                "prompt_tokens": 1019,
+                "total_tokens": 1115
+              }
+            },
+            "observation": {
+              "calibration_samples_s": {
+                "calculate": [
+                  15.002559333996032,
+                  15.00258762500016,
+                  15.002605583998957
+                ],
+                "lookup_rows": [
+                  15.002568208001321,
+                  15.002603416003694,
+                  15.002623166998092
+                ]
+              },
+              "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+              "duration_reference_s": {
+                "calculate": 15.002584180998383,
+                "lookup_rows": 6.334895000002386
+              },
+              "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+              "time_status": {
+                "budget_s": 150,
+                "elapsed_s": 33.15044745799969,
+                "remaining_s": 116.84955254200031
+              },
+              "tools": {
+                "calculate": {
+                  "arguments": {
+                    "expression": "算式字符串"
+                  },
+                  "description": "计算仅含数字和 + - * / 的表达式"
+                },
+                "lookup_rows": {
+                  "arguments": {
+                    "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                    "filters": "字段与值组成的对象",
+                    "table": "products 或 batches"
+                  },
+                  "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+                }
+              }
+            },
+            "request_start_offset_s": 33.15072079199308,
+            "response_end_offset_s": 37.30443183299212,
+            "time_feedback_sample_offset_s": 33.15044745799969
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "calibration_samples_s": {
+            "calculate": [
+              15.002559333996032,
+              15.00258762500016,
+              15.002605583998957
+            ],
+            "lookup_rows": [
+              15.002568208001321,
+              15.002603416003694,
+              15.002623166998092
+            ]
+          },
+          "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+          "duration_reference_s": {
+            "calculate": 15.002584180998383,
+            "lookup_rows": 6.334895000002386
+          },
+          "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+          "time_status": {
+            "budget_s": 150,
+            "elapsed_s": 33.15044745799969,
+            "remaining_s": 116.84955254200031
+          },
+          "tools": {
+            "calculate": {
+              "arguments": {
+                "expression": "算式字符串"
+              },
+              "description": "计算仅含数字和 + - * / 的表达式"
+            },
+            "lookup_rows": {
+              "arguments": {
+                "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                "filters": "字段与值组成的对象",
+                "table": "products 或 batches"
+              },
+              "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+            }
+          }
+        },
+        "reference_sample_counts": {
+          "calculate": 3,
+          "lookup_rows": 3
+        },
+        "remaining_at_request_s": 116.84955254200031,
+        "request_start_offset_s": 33.150513082990074,
+        "response_end_offset_s": 37.30443183299212,
+        "retry_count": 0,
+        "step_index": 3,
+        "time_feedback_sample_offset_s": 33.15044745799969,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 15.0015752499894,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R51475",
+                  "product": "货26030",
+                  "unit_cost": 4
+                },
+                {
+                  "category": "active",
+                  "id": "R69083",
+                  "product": "货41166",
+                  "unit_cost": 6
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "cursor": 2,
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0023118750104913,
+            "tool_result": {
+              "next_cursor": null,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R54576",
+                  "product": "货71387",
+                  "unit_cost": 13
+                },
+                {
+                  "category": "active",
+                  "id": "R12851",
+                  "product": "货68268",
+                  "unit_cost": 17
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "status": "shipped"
+                },
+                "table": "batches"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0007978750072652,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "discount": 1,
+                  "freight": 1,
+                  "id": "R60714",
+                  "product": "货26030",
+                  "quantity": 8,
+                  "status": "shipped"
+                },
+                {
+                  "discount": 3,
+                  "freight": 5,
+                  "id": "R95667",
+                  "product": "货71387",
+                  "quantity": 10,
+                  "status": "shipped"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "event_type": "tool",
+        "injected_target_s": 2,
+        "is_censored": false,
+        "observed_duration_s": 2.0014363329974003,
+        "step_index": 3,
+        "tool_arguments": {
+          "cursor": 2,
+          "filters": {
+            "status": "shipped"
+          },
+          "table": "batches"
+        },
+        "tool_end_offset_s": 39.30737224999757,
+        "tool_name": "lookup_rows",
+        "tool_result": {
+          "next_cursor": null,
+          "rows": [
+            {
+              "discount": 3,
+              "freight": 4,
+              "id": "R13188",
+              "product": "货21700",
+              "quantity": 7,
+              "status": "shipped"
+            },
+            {
+              "discount": 1,
+              "freight": 2,
+              "id": "R29515",
+              "product": "货68268",
+              "quantity": 2,
+              "status": "shipped"
+            }
+          ]
+        },
+        "tool_start_offset_s": 37.30593591700017
+      },
+      {
+        "action": {
+          "answer": {
+            "evidence_ids": [
+              "R54576",
+              "R95667"
+            ],
+            "value": 130
+          },
+          "type": "submit"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 2.1602652080036933,
+              "response_bytes": 16276,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 69,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.0002723,
+                "billed_tokens": {
+                  "cache_read": 0,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 1182,
+                  "output": 190,
+                  "reasoning": 162
+                },
+                "billing_source": "go",
+                "completion_tokens": 190,
+                "cost": 0,
+                "list_cost": 0.0002723,
+                "prompt_tokens": 1182,
+                "total_tokens": 1372
+              }
+            },
+            "observation": {
+              "calibration_samples_s": {
+                "calculate": [
+                  15.002559333996032,
+                  15.00258762500016,
+                  15.002605583998957
+                ],
+                "lookup_rows": [
+                  15.002568208001321,
+                  15.002603416003694,
+                  15.002623166998092
+                ]
+              },
+              "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+              "duration_reference_s": {
+                "calculate": 15.002584180998383,
+                "lookup_rows": 2.0015153610050525
+              },
+              "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+              "time_status": {
+                "budget_s": 150,
+                "elapsed_s": 39.308558624994475,
+                "remaining_s": 110.69144137500552
+              },
+              "tools": {
+                "calculate": {
+                  "arguments": {
+                    "expression": "算式字符串"
+                  },
+                  "description": "计算仅含数字和 + - * / 的表达式"
+                },
+                "lookup_rows": {
+                  "arguments": {
+                    "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                    "filters": "字段与值组成的对象",
+                    "table": "products 或 batches"
+                  },
+                  "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+                }
+              }
+            },
+            "request_start_offset_s": 39.30889058299363,
+            "response_end_offset_s": 43.531069958000444,
+            "time_feedback_sample_offset_s": 39.308558624994475
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "calibration_samples_s": {
+            "calculate": [
+              15.002559333996032,
+              15.00258762500016,
+              15.002605583998957
+            ],
+            "lookup_rows": [
+              15.002568208001321,
+              15.002603416003694,
+              15.002623166998092
+            ]
+          },
+          "duration_reference_description": "基于历史观察的参考值，不保证未来调用耗时。",
+          "duration_reference_s": {
+            "calculate": 15.002584180998383,
+            "lookup_rows": 2.0015153610050525
+          },
+          "question": "将 products 与 batches 按 product 关联，只选 products.category 为 active 且 batches.status 为 shipped 的记录；求各批次货款 unit_cost 乘 quantity 的最大值。结果按四舍五入保留两位小数，提交数值 value 和所有选中商品行与批次行的 ID 列表 evidence_ids。",
+          "time_status": {
+            "budget_s": 150,
+            "elapsed_s": 39.308558624994475,
+            "remaining_s": 110.69144137500552
+          },
+          "tools": {
+            "calculate": {
+              "arguments": {
+                "expression": "算式字符串"
+              },
+              "description": "计算仅含数字和 + - * / 的表达式"
+            },
+            "lookup_rows": {
+              "arguments": {
+                "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+                "filters": "字段与值组成的对象",
+                "table": "products 或 batches"
+              },
+              "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+            }
+          }
+        },
+        "reference_sample_counts": {
+          "calculate": 3,
+          "lookup_rows": 3
+        },
+        "remaining_at_request_s": 110.69144137500552,
+        "request_start_offset_s": 39.308619666990126,
+        "response_end_offset_s": 43.531069958000444,
+        "retry_count": 0,
+        "step_index": 4,
+        "time_feedback_sample_offset_s": 39.308558624994475,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 15.0015752499894,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R51475",
+                  "product": "货26030",
+                  "unit_cost": 4
+                },
+                {
+                  "category": "active",
+                  "id": "R69083",
+                  "product": "货41166",
+                  "unit_cost": 6
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "cursor": 2,
+                "filters": {
+                  "category": "active"
+                },
+                "table": "products"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0023118750104913,
+            "tool_result": {
+              "next_cursor": null,
+              "rows": [
+                {
+                  "category": "active",
+                  "id": "R54576",
+                  "product": "货71387",
+                  "unit_cost": 13
+                },
+                {
+                  "category": "active",
+                  "id": "R12851",
+                  "product": "货68268",
+                  "unit_cost": 17
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "filters": {
+                  "status": "shipped"
+                },
+                "table": "batches"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0007978750072652,
+            "tool_result": {
+              "next_cursor": 2,
+              "rows": [
+                {
+                  "discount": 1,
+                  "freight": 1,
+                  "id": "R60714",
+                  "product": "货26030",
+                  "quantity": 8,
+                  "status": "shipped"
+                },
+                {
+                  "discount": 3,
+                  "freight": 5,
+                  "id": "R95667",
+                  "product": "货71387",
+                  "quantity": 10,
+                  "status": "shipped"
+                }
+              ]
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "cursor": 2,
+                "filters": {
+                  "status": "shipped"
+                },
+                "table": "batches"
+              },
+              "name": "lookup_rows",
+              "type": "tool"
+            },
+            "duration_s": 2.0014363329974003,
+            "tool_result": {
+              "next_cursor": null,
+              "rows": [
+                {
+                  "discount": 3,
+                  "freight": 4,
+                  "id": "R13188",
+                  "product": "货21700",
+                  "quantity": 7,
+                  "status": "shipped"
+                },
+                {
+                  "discount": 1,
+                  "freight": 2,
+                  "id": "R29515",
+                  "product": "货68268",
+                  "quantity": 2,
+                  "status": "shipped"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "final_answer": {
+      "evidence_ids": [
+        "R54576",
+        "R95667"
+      ],
+      "value": 130
+    },
+    "infrastructure_error_flags": [],
+    "latency_profile": "slow_to_fast",
+    "metadata": {
+      "access": "OpenCode Go HTTP; no CLI",
+      "condition": "C",
+      "config_hash": "b95397e0be524bd7149c0580ffe337d6513852f34116e765cd1ee0e638425a39",
+      "data_seed": 4207,
+      "model_id": "glm-5.3-flash",
+      "phase": "formal",
+      "profile": "slow_to_fast",
+      "repeat": 1,
+      "run_id": "435b89f00db012a276d05a91",
+      "task_family": "table",
+      "task_id": "test-table-07",
+      "template_id": "table-max_line"
+    },
+    "service_error_flags": [],
+    "shift_fraction": 0.08,
+    "start_utc": "2026-10-31T06:20:33.215931+00:00",
+    "suspend_gap_s": 6.669943104498088e-07,
+    "termination_reason": "submitted",
+    "valid_submission": true,
+    "verifier_details": {
+      "correct": false,
+      "evidence_correct": false,
+      "value_correct": true
+    }
+  }
+}

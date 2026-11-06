@@ -2,7 +2,7 @@
 import asyncio
 import copy
 import datetime
-import time
+from .elapsed_clock import EpisodeClock, EnvironmentInterruption, clock_metadata
 from .conditions import duration_references, target_delay
 from .protocol import ProtocolViolation
 
@@ -40,15 +40,17 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
     duration_references(condition, calibration, {}, window)
     target_delay(profile, 0, budget_s, shift_fraction, fast_s, slow_s)
     start_utc = _utc()
-    start = time.monotonic()
+    clock = EpisodeClock()
+    start = clock.start
     deadline = start + budget_s
-    now = lambda: time.monotonic() - start
+    now = clock.elapsed
     history, events, completed = [], [], {name: [] for name in tool_schemas}
     result = {'metadata': copy.deepcopy(metadata or {}), 'start_utc': start_utc,
               'condition': condition, 'latency_profile': profile, 'budget_s': budget_s,
               'shift_fraction': shift_fraction, 'events': events, 'valid_submission': False,
               'deadline_success': False, 'termination_reason': None, 'verifier_details': None,
-              'final_answer': None, 'service_error_flags': []}
+              'final_answer': None, 'service_error_flags': [], 'infrastructure_error_flags': [],
+              'clock': clock_metadata()}
     def emit(kind, payload):
         if event_sink is not None:
             event_sink({'kind': kind, 'offset_s': now(), 'data': copy.deepcopy(payload)})
@@ -61,28 +63,47 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
             allowed = ('event_types', 'error_count', 'status_codes', 'message_offset_s',
                        'turn_completed_offset_s', 'timing_semantics', 'tail_events_audited',
                        'cleanup_async', 'eof_offset_s', 'cleanup_status')
+            allowed += ('usage', 'finish_reason')
+            allowed += ('streaming','transport_error_type','error_category','response_bytes',
+                        'first_response_byte_offset_s','stream_event_count')
             attempt_event['adapter_diagnostics'] = {k: copy.deepcopy(diagnostics[k])
                                                     for k in allowed if k in diagnostics}
 
     emit('episode_start', {'metadata': result['metadata'], 'start_utc': start_utc,
                            'condition': condition, 'profile': profile, 'budget_s': budget_s})
 
+    def check_environment():
+        try:
+            clock.check()
+        except EnvironmentInterruption:
+            result['termination_reason'] = 'environment_interruption'
+            result['infrastructure_error_flags'].append({'type': 'host_suspend', 'offset_s': now()})
+            raise
+
     async def bounded(awaitable):
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            if hasattr(awaitable, 'close'):
-                awaitable.close()
-            raise asyncio.TimeoutError()
-        return await asyncio.wait_for(awaitable, timeout=remaining)
+        try:
+            return await clock.wait(awaitable, deadline)
+        except EnvironmentInterruption:
+            result['termination_reason'] = 'environment_interruption'
+            result['infrastructure_error_flags'].append({'type': 'host_suspend', 'offset_s': now()})
+            raise
 
     for step in range(max_steps):
-        if time.monotonic() >= deadline:
+        try:
+            check_environment()
+        except EnvironmentInterruption:
+            break
+        if clock.time() >= deadline:
             result['termination_reason'] = 'timeout_before_request'
             break
         # Persist intent before sampling time; synchronous journaling must not
         # make the time shown to the model stale before the request starts.
         emit('model_request_started', {'step_index': step})
-        if time.monotonic() >= deadline:
+        try:
+            check_environment()
+        except EnvironmentInterruption:
+            break
+        if clock.time() >= deadline:
             result['termination_reason'] = 'timeout_before_request'
             break
         refs, counts = duration_references(condition, calibration, completed, window)
@@ -124,7 +145,7 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
                 attempt_event['response_end_offset_s'] = event['response_end_offset_s']
                 record_adapter_diagnostics(attempt_event)
                 event['is_censored'] = True
-                result['termination_reason'] = 'timeout_model'
+                result['termination_reason'] = result['termination_reason'] or 'timeout_model'
                 break
             except Exception as exc:
                 # Never log exception text: it may contain credentials or request content.
@@ -142,7 +163,7 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
                     try:
                         await bounded(asyncio.sleep(retry_delay_s))
                     except asyncio.TimeoutError:
-                        result['termination_reason'] = 'timeout_model_retry'
+                        result['termination_reason'] = result['termination_reason'] or 'timeout_model_retry'
                         break
                     continue
                 result['termination_reason'] = 'service_error'
@@ -152,7 +173,7 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
             break
         emit('model_request_ended', event)
         if event['response_end_offset_s'] >= budget_s:
-            result['termination_reason'] = 'timeout_model'
+            result['termination_reason'] = result['termination_reason'] or 'timeout_model'
             break
         if isinstance(action, dict) and action.get('type') == 'submit' and validate_submission(action.get('answer')):
             result['valid_submission'] = True
@@ -171,6 +192,10 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
             continue
         # Record intent first; start phase and duration are sampled after disk I/O.
         emit('tool_started', {'step_index': step, 'tool_name': name, 'tool_arguments': args})
+        try:
+            check_environment()
+        except EnvironmentInterruption:
+            break
         tool_start = now()
         if tool_start >= budget_s:
             result['termination_reason'] = 'timeout_before_tool'
@@ -197,13 +222,13 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
             await bounded(asyncio.sleep(max(0.0, target - (now() - tool_start))))
         except asyncio.TimeoutError:
             tool_event.update({'tool_end_offset_s': now(), 'is_censored': True})
-            result['termination_reason'] = 'timeout_tool'
+            result['termination_reason'] = result['termination_reason'] or 'timeout_tool'
             emit('tool_ended', tool_event)
             break
         tool_end = now()
-        if time.monotonic() >= deadline:
+        if clock.time() >= deadline:
             tool_event.update({'tool_end_offset_s': tool_end, 'is_censored': True})
-            result['termination_reason'] = 'timeout_tool'
+            result['termination_reason'] = result['termination_reason'] or 'timeout_tool'
             emit('tool_ended', tool_event)
             break
         duration = tool_end - tool_start
@@ -215,6 +240,8 @@ async def run_episode(model, *, question, tool_schemas, calibration, call_tool, 
     else:
         result['termination_reason'] = 'step_limit'
     result['elapsed_s'] = now()
+    result['end_utc'] = _utc()
+    result['suspend_gap_s'] = clock.suspend_gap()
     emit('episode_finished', {'termination_reason': result['termination_reason'],
                               'deadline_success': result['deadline_success'],
                               'valid_submission': result['valid_submission'],

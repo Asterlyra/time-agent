@@ -6,13 +6,13 @@
 
 ## Abstract
 
-Agents that call tools under a wall-clock budget must decide when to stop gathering information. A natural interface intervention is to summarise the latency observed so far — as a fixed prior or as a running estimate — so that the agent can plan its remaining time. We test this intervention and its alternatives in three pre-registered studies with four production language models, 3,703 episodes in total, with deterministic host-injected scoring and paired within-task comparisons.
+Agents that call tools under a wall-clock budget must decide when to stop gathering information. A natural interface intervention is to summarise the latency observed so far — as a fixed prior or as a running estimate — so that the agent can plan its remaining time. We test this intervention and its alternatives in three pre-registered studies with four production language models, 6,269 episodes in total, with deterministic host-injected scoring and paired within-task comparisons.
 
 Study 1 (1,080 episodes; evidence retrieval with binary scoring) found no improvement from an adaptively updated summary over a static prior: the equal-weight difference in deadline success was +0.83 percentage points, 95% cluster-bootstrap CI [−5.83, +8.33]. The null was a property of the design, not of the models. The task admitted only one scoring policy, so the estimate could not change the optimal action; every per-call duration was already in the visible history, so the summary was a function of data on screen; and 91.0% of successful episodes finished with 30 s or more of a 150 s budget unspent.
 
 Study 2 (432 episodes) removes both defects. In a partial-credit task the agent stops whenever it likes and keeps what it has, so the expected cost of the next call determines the optimal stopping point. The four conditions differ in exactly one field: no reference, a static prior, a last-observation estimate, or a perfect oracle. The manipulation was strong — mean absolute reference error 8.0 s, 3.6 s and 1.5 s while the true cost drifted from 8 s to 60 s — and the effect was nil: −0.36 items, 95% CI [−1.1, +0.4], p = 0.44. Behaviour was unchanged as well: the probability of starting another fetch was a function of the remaining budget alone. Given the stale prior, a simulated planner would have collected 2.2 items; the agents collected 7.0, and under the oracle 7.2 against the planner's 7.2.
 
-Study 3 (2,191 episodes) asks what still matters once the agent already has a clock. A model never observes its own inference latency; the harness measures it directly. Across five arms that run identical code — no information; full information including the agent's own measured request latency; a reserve the agent declares; a reserve the harness computes; and the same rule with a perfect cost model — enforcing a deadline reserve raised the points banked by +6.08 (95% CI [+4.91, +7.36], p = 0.0005), and it made no difference whether the reserve came from the harness or from the agent's own declaration (-1.83, 95% CI [-3.97, +0.25]); information alone, including the agent's own measured request latency, made the score worse (-3.70, 95% CI [-6.04, -1.95]).
+Study 3 (4,757 episodes) asks what still matters once the agent already has a clock. A model never observes its own inference latency; the harness measures it directly. Across five arms that run identical code — no information; full information including the agent's own measured request latency; a reserve the agent declares; a reserve the harness computes; and the same rule with a perfect cost model — enforcing a deadline reserve raised the points banked by +6.10 (95% CI [+5.20, +6.98], p = 0.0005), and it made no difference whether the reserve came from the harness or from the agent's own declaration (-0.58, 95% CI [-1.88, +0.67]); information alone, including the agent's own measured request latency, made the score worse (-2.94, 95% CI [-3.85, -1.94]).
 
 Agents with a clock already extract the cost of their tools. What they cannot extract is the cost of
 themselves, and what they cannot do is bind their future self to it. A reserve that is *enforced* —
@@ -25,7 +25,7 @@ Tool-using language-model agents are increasingly deployed against deadlines: a 
 
 A recurring proposal in agent engineering is to make latency explicit. Instead of leaving the agent to infer how long calls take, the harness computes a summary — the mean duration of the tools it has called, perhaps with a fixed prior from calibration — and places it in the observation next to the remaining budget. The intuition is that the agent will then plan: with 60 s left and calls costing 45 s, it should stop; with 60 s left and calls costing 3 s, it should continue.
 
-This paper asks whether that intuition survives contact with real models. We ran three pre-registered, paired, fully instrumented studies with four models served through a single API (GLM-5.3-Flash, Qwen3.8-Flash, DeepSeek-V4.1-Flash and MiMo-V2.6-Flash), and with call latency injected by the host so that the true cost of every call is known to the experimenter: 1,512 episodes in the first two studies and 2,191 in the third.
+This paper asks whether that intuition survives contact with real models. We ran three pre-registered, paired, fully instrumented studies with four models served through a single API (GLM-5.3-Flash, Qwen3.8-Flash, DeepSeek-V4.1-Flash and MiMo-V2.6-Flash), and with call latency injected by the host so that the true cost of every call is known to the experimenter: 1,512 episodes in the first two studies and 4,757 in the third.
 
 Study 1 was a conventional design: retrieve a set of documents or join two tables, compute a value, submit the value together with exactly the source identifiers that support it. Across 1080 episodes the adaptive summary did not beat the static prior, and neither differed from no summary at all.
 
@@ -41,13 +41,13 @@ The information manipulation was large and the behavioural effect was nil. Displ
 
 That result raises the obvious objection. If the agent already reads the clock, why does it still fail? In Study 2 between 14% and 27% of episodes ended without a submission, and the fatal decision was almost always the last fetch. Something about time is missing from the model's picture, and it is not the cost of the tool.
 
-Study 3 locates it. A model never observes how long *it* takes: every observation arrives after its own inference has already happened, so elapsed time mixes thinking and execution with no way to separate them. The harness measures request latency directly — but measuring it and *saying* it are different acts. Study 3 therefore separates the two. Five arms run identical episode code: no information; full information including the agent's own measured latency; a reserve the agent declares and the harness enforces; a reserve the harness computes and enforces; and the same rule with a perfect cost model. Across 2,191 episodes, with a control in which call durations are nearly deterministic, enforcing a deadline reserve raised the points banked by +6.08 (95% CI [+4.91, +7.36], p = 0.0005); information alone, including the agent's own measured request latency, made the score worse (-3.70, 95% CI [-6.04, -1.95]), and it made no difference whether the declared reserve came from the agent or from the harness (-1.83, 95% CI [-3.97, +0.25]).
+Study 3 locates it. A model never observes how long *it* takes: every observation arrives after its own inference has already happened, so elapsed time mixes thinking and execution with no way to separate them. The harness measures request latency directly — but measuring it and *saying* it are different acts. Study 3 therefore separates the two. Five arms run identical episode code: no information; full information including the agent's own measured latency; a reserve the agent declares and the harness enforces; a reserve the harness computes and enforces; and the same rule with a perfect cost model. Across 4,757 episodes, with a control in which call durations are nearly deterministic, enforcing a deadline reserve raised the points banked by +6.10 (95% CI [+5.20, +6.98], p = 0.0005); information alone, including the agent's own measured request latency, made the score worse (-2.94, 95% CI [-3.85, -1.94]), and it made no difference whether the declared reserve came from the agent or from the harness (-0.58, 95% CI [-1.88, +0.67]).
 
 Our contributions are:
 
 - A 1080-episode paired null for latency summaries, with a design-level diagnosis that identifies decision leverage and information redundancy as the binding constraints (§3).
 - A 432-episode experiment in which the same intervention is given real decision leverage, and a precise null: the estimate moved, the behaviour and the outcome did not (§4).
-- A 2,191-episode experiment that isolates the one piece of time information a model cannot obtain for itself, and shows that what changes deadline behaviour is enforcement rather than information: a mechanically enforced reserve gains +6.08 points while the same information given to the agent cost the score 3.70 points (95% CI [-6.04, -1.95]) (§5).
+- A 4,757-episode experiment that isolates the one piece of time information a model cannot obtain for itself, and shows that what changes deadline behaviour is enforcement rather than information: a mechanically enforced reserve gains +6.10 points while the same information given to the agent cost the score 2.94 points (95% CI [-3.85, -1.94]) (§5).
 - The distinction between the *declared* estimate an interface supplies and the *operative* estimate an agent acts on, and its consequence for harness design: put the clock in the harness (§6).
 
 ## 2. Related work
@@ -281,76 +281,78 @@ The reserve must cover one more *request*, not one more tool call, because the h
 
 ### 5.3 Protocol
 
-The pre-registered matrix is four models × two families × 16 task instances per family × four regimes × five arms, with three repeats for GLM, DeepSeek and MiMo and two for Qwen, whose request latency makes it the throughput bottleneck; 7,040 episodes planned; 2,191 were completed and scored, the remainder unfinished when data collection ended. A block is one (model, task instance, regime) and runs the five arms back to back with the arm order rotated across positions; a cell accumulates two or three such blocks, and the repeats are averaged inside the cell before any pairing, because each repeat is an independent draw of the same stochastic environment rather than a third of a fixed quantity. The primary estimand is the `hetero`, all-regime difference between `E` and `I0` in banked points, equal weight over the four models, with a block-cluster paired bootstrap (10,000 draws, seed 911) and a sign-flip randomisation test. `light_tail` is the pre-registered negative control: if enforcement works by protecting against a tail the agent cannot foresee, it should do little when there is no tail.
+The pre-registered matrix is four models × two families × 16 task instances per family × four regimes × five arms, with three repeats for GLM, DeepSeek and MiMo and two for Qwen, whose request latency makes it the throughput bottleneck; 7,040 episodes planned; 4,757 were completed and scored, the remainder unfinished when data collection ended. A block is one (model, task instance, regime) and runs the five arms back to back with the arm order rotated across positions; a cell accumulates two or three such blocks, and the repeats are averaged inside the cell before any pairing, because each repeat is an independent draw of the same stochastic environment rather than a third of a fixed quantity. The primary estimand is the `hetero`, all-regime difference between `E` and `I0` in banked points, equal weight over the four models, with a block-cluster paired bootstrap (10,000 draws, seed 911) and a sign-flip randomisation test. `light_tail` is the pre-registered negative control: if enforcement works by protecting against a tail the agent cannot foresee, it should do little when there is no tail.
 
 ### 5.4 Results
 
-Of the 7040 planned episodes, 2191 are accounted for: 2183 scored and 8 archived host-suspend failures, retained at zero and flagged. Table 7 gives the points banked by family, regime and arm.
+All 7,040 planned episodes produced a record. 2,283 of those records are provider refusals: the account moved to balance billing partway through collection, and the request was rejected before the model ran, so they are excluded rather than scored zero — they contain no behaviour to score. The analysis rests on the 4,757 observable episodes, with the 8 host interruptions kept at zero and flagged. Their share is flat across arms (32% in every arm), so the paired contrast is unaffected. Table 7 gives the points banked by family, regime and arm.
+
+Every one of the 64 (task, regime) cells now has all five arms observed, so the paired contrast uses the whole design; the refusals cost completeness while they lasted, not arm balance.
 
 **Table 7. Study 3, mean points banked (maximum 5 × number of items).**
 
 | Family | Regime | I0 | I1 | C | E | O |
 |---|---|---:|---:|---:|---:|---:|
-| uniform | light tail | 3.5 | 2.3 | 4.9 | 5.6 | 5.6 |
-| uniform | fast, heavy tail | 1.9 | 2.3 | 5.6 | 6.0 | 5.5 |
-| uniform | slow, heavy tail | 1.1 | 1.6 | 2.1 | 2.4 | 2.8 |
-| uniform | drifting, heavy tail | 2.2 | 2.3 | 4.0 | 3.7 | 3.6 |
-| hetero | light tail | 13.0 | 8.8 | 21.1 | 21.5 | 20.9 |
-| hetero | fast, heavy tail | 15.3 | 12.1 | 18.0 | 20.7 | 21.0 |
-| hetero | slow, heavy tail | 10.0 | 6.3 | 14.7 | 14.1 | 14.8 |
-| hetero | drifting, heavy tail | 10.9 | 9.5 | 14.6 | 16.2 | 17.1 |
+| uniform | light tail | 3.1 | 2.7 | 5.9 | 6.3 | 6.1 |
+| uniform | fast, heavy tail | 3.2 | 3.4 | 6.3 | 6.5 | 6.3 |
+| uniform | slow, heavy tail | 1.3 | 1.5 | 2.5 | 2.4 | 2.6 |
+| uniform | drifting, heavy tail | 2.2 | 2.8 | 4.0 | 4.1 | 4.3 |
+| hetero | light tail | 12.9 | 9.9 | 19.9 | 20.8 | 20.1 |
+| hetero | fast, heavy tail | 14.4 | 13.1 | 19.7 | 20.9 | 21.1 |
+| hetero | slow, heavy tail | 10.3 | 7.0 | 15.6 | 14.0 | 15.6 |
+| hetero | drifting, heavy tail | 11.6 | 8.9 | 15.2 | 17.7 | 19.2 |
 
 ![Points banked by arm](figures/fig6_s3_arms.png)
 
 **Figure 6.** Study 3, points banked by arm, in the uniform and heterogeneous families; bars are means with 95% normal-approximation intervals over episodes.
 
-**Primary contrast.** In the heterogeneous family, the equal-weight E−I0 difference was +6.08 points, 95% cluster-bootstrap CI [+4.91, +7.36], sign-flip p = 0.000 over 16 paired blocks. Per model: GLM +0.16, Qwen +5.71, DeepSeek +8.99, MiMo +9.47.
+**Primary contrast.** In the heterogeneous family, the equal-weight E−I0 difference was +6.10 points, 95% cluster-bootstrap CI [+5.20, +6.98], sign-flip p = 0.000 over 16 paired blocks. Per model: GLM -0.31, Qwen +5.27, DeepSeek +9.22, MiMo +10.23.
 
 **Table 8. Study 3, pre-registered contrasts (points, 95% cluster bootstrap CI).**
 
 | Family | Contrast | Pooled | 95% CI | p | GLM | Qwen | DeepSeek | MiMo |
 |---|---|---:|---|---:|---:|---:|---:|---:|
-| uniform | E−I0 | +2.13 | [+1.63, +2.63] | 0.000 | +1.66 | +1.14 | +3.02 | +2.71 |
-| uniform | I1−I0 | -0.10 | [-0.57, +0.35] | 0.602 | -1.38 | +0.04 | +0.84 | +0.08 |
-| uniform | C−I0 | +1.95 | [+1.35, +2.57] | 0.000 | +1.37 | +0.78 | +3.12 | +2.55 |
-| uniform | C−E | -0.18 | [-0.58, +0.22] | 0.385 | -0.29 | -0.37 | +0.09 | -0.15 |
-| uniform | E−O | -0.11 | [-0.59, +0.61] | 0.747 | -0.07 | +0.07 | -0.38 | -0.06 |
-| hetero | E−I0 | +6.08 | [+4.91, +7.36] | 0.000 | +0.16 | +5.71 | +8.99 | +9.47 |
-| hetero | I1−I0 | -3.70 | [-6.04, -1.95] | 0.000 | -7.60 | +0.62 | -4.64 | -3.19 |
-| hetero | C−I0 | +4.25 | [+2.27, +6.01] | 0.000 | -1.00 | +3.38 | +4.01 | +10.63 |
-| hetero | C−E | -1.83 | [-3.97, +0.25] | 0.122 | -1.17 | -2.33 | -4.98 | +1.16 |
-| hetero | E−O | -0.15 | [-1.61, +1.25] | 0.856 | -1.84 | -0.04 | +0.79 | +0.50 |
+| uniform | E−I0 | +2.37 | [+1.82, +2.85] | 0.000 | +1.80 | +1.08 | +3.63 | +2.97 |
+| uniform | I1−I0 | -0.07 | [-0.49, +0.35] | 0.781 | -0.10 | +0.00 | -0.07 | -0.09 |
+| uniform | C−I0 | +2.25 | [+1.62, +2.85] | 0.000 | +1.37 | +0.96 | +3.01 | +3.66 |
+| uniform | C−E | -0.12 | [-0.47, +0.23] | 0.525 | -0.43 | -0.12 | -0.62 | +0.69 |
+| uniform | E−O | -0.10 | [-0.40, +0.24] | 0.587 | -0.24 | -0.01 | -0.28 | +0.16 |
+| hetero | E−I0 | +6.10 | [+5.20, +6.98] | 0.000 | -0.31 | +5.27 | +9.22 | +10.23 |
+| hetero | I1−I0 | -2.94 | [-3.85, -1.94] | 0.001 | -5.86 | -0.07 | -2.48 | -3.35 |
+| hetero | C−I0 | +5.52 | [+4.29, +6.85] | 0.000 | +0.60 | +3.41 | +7.39 | +10.67 |
+| hetero | C−E | -0.58 | [-1.88, +0.67] | 0.403 | +0.91 | -1.86 | -1.82 | +0.44 |
+| hetero | E−O | -0.64 | [-1.57, +0.36] | 0.227 | -1.68 | +0.07 | -2.04 | +1.07 |
 
 **Table 9. Study 3, why episodes end.**
 
 | Family | Arm | submitted | forced | mean banked items | mean denied fetches |
 |---|---|---:|---:|---:|---:|
-| uniform | I0 | 0.34 | 0.00 | 2.0 | 0.0 |
-| uniform | I1 | 0.32 | 0.00 | 2.1 | 0.0 |
-| uniform | C | 0.73 | 0.68 | 4.0 | 1.1 |
-| uniform | E | 0.92 | 0.90 | 4.3 | 0.3 |
-| uniform | O | 0.92 | 0.89 | 4.2 | 0.3 |
-| hetero | I0 | 0.43 | 0.00 | 2.9 | 0.0 |
-| hetero | I1 | 0.34 | 0.00 | 2.2 | 0.0 |
-| hetero | C | 0.78 | 0.71 | 3.9 | 1.3 |
-| hetero | E | 0.90 | 0.87 | 4.2 | 0.3 |
-| hetero | O | 0.89 | 0.81 | 4.4 | 0.4 |
+| uniform | I0 | 0.38 | 0.00 | 2.5 | 0.0 |
+| uniform | I1 | 0.36 | 0.00 | 2.6 | 0.0 |
+| uniform | C | 0.79 | 0.72 | 4.8 | 1.2 |
+| uniform | E | 0.92 | 0.89 | 4.9 | 0.3 |
+| uniform | O | 0.93 | 0.89 | 4.9 | 0.3 |
+| hetero | I0 | 0.44 | 0.00 | 3.0 | 0.0 |
+| hetero | I1 | 0.35 | 0.00 | 2.4 | 0.0 |
+| hetero | C | 0.76 | 0.69 | 4.1 | 1.2 |
+| hetero | E | 0.91 | 0.87 | 4.3 | 0.3 |
+| hetero | O | 0.92 | 0.85 | 4.5 | 0.5 |
 
-**Enforcement, not information.** A reserve the harness computes and enforces beat the unguarded baseline by +6.08 points [+4.91, +7.36] (Figure 6; Table 8 collects every pre-registered contrast). A reserve the *agent* declared, then mechanically enforced by the same code, did just as well (+4.25, [+2.27, +6.01]); the difference between the two is -1.83 [-3.97, +0.25]: indistinguishable. What separates both from the informational arms is therefore not who chooses the number but whether anything acts on it. Even a perfect cost model buys little once the reserve is enforced: O trails E by -0.15 [-1.61, +1.25]. The mechanism is visible in how episodes end (Figure 7): in `I0` and `I1` most failures are episodes still waiting on a call when the budget ran out, while under `C`, `E` and `O` the harness submits whatever is in hand before the deadline.
+**Enforcement, not information.** A reserve the harness computes and enforces beat the unguarded baseline by +6.10 points [+5.20, +6.98] (Figure 6; Table 8 collects every pre-registered contrast). A reserve the *agent* declared, then mechanically enforced by the same code, did just as well (+5.52, [+4.29, +6.85]); the difference between the two is -0.58 [-1.88, +0.67]: indistinguishable. What separates both from the informational arms is therefore not who chooses the number but whether anything acts on it. Even a perfect cost model buys little once the reserve is enforced: O trails E by -0.64 [-1.57, +0.36]. The mechanism is visible in how episodes end (Figure 7): in `I0` and `I1` most failures are episodes still waiting on a call when the budget ran out, while under `C`, `E` and `O` the harness submits whatever is in hand before the deadline.
 
 ![How episodes end](figures/fig7_s3_termination.png)
 
 **Figure 7.** Study 3, how episodes end in the heterogeneous family. `I0` and `I1` mostly die inside a call or a request; under `C`, `E` and `O` the harness submits whatever is in hand before the budget expires.
 
-**Information without a rule.** Giving the agent the numbers does not do this. Full information made the score worse (I1−I0 = -3.70 [-6.04, -1.95]). The arm displayed the per-size cost estimates and the agent's own median request latency — a number the model cannot observe directly — and the agents went on making almost exactly the same calls: in the heterogeneous family I0 and I1 make 5.1 and 5.1 calls and fetch 5.0 and 5.0 items on average, so the policy did not change what the agent did, only how often the doing was cut off. What changed was the ending, not the calls: the share of episodes that ended in a submission fell from 43% to 34%, and the points fell with it. The obvious explanation is that the extra text makes each request slower; it does not. Request p50 is 11.3 s in `I0` and 11.2 s in `I1`, and request durations by step index are indistinguishable. We report the cost without claiming its mechanism. This is the Study 2 finding again — the declared estimate improved while the operative one did not — now with stochastic costs and differing item values.
+**Information without a rule.** Giving the agent the numbers does not do this. Full information made the score worse (I1−I0 = -2.94 [-3.85, -1.94]). The arm displayed the per-size cost estimates and the agent's own median request latency — a number the model cannot observe directly — and the agents went on making almost exactly the same calls: in the heterogeneous family I0 and I1 make 3.6 and 3.6 calls and fetch 3.5 and 3.5 items on average, so the policy did not change what the agent did, only how often the doing was cut off. What changed was the ending, not the calls: the share of episodes that ended in a submission fell from 44% to 35%, and the points fell with it. The obvious explanation is that the extra text makes each request slower; it does not. Request p50 is 11.2 s in `I0` and 10.9 s in `I1`, and request durations by step index are indistinguishable. We report the cost without claiming its mechanism. This is the Study 2 finding again — the declared estimate improved while the operative one did not — now with stochastic costs and differing item values.
 
-**The decision itself.** Figure 8 reads the moment a call is started off every episode. If the informational arm changed what the agent does, its calls would sit further from the deadline than the unguarded arm's. They do not: the median call in `I1` starts with 124.2 s left, against 123.6 s in `I0`, and the two arms make 5.15 calls per episode each. Measured against the model's own request distribution, the share of calls started on a budget too short to pay for a typical slow request is 3.0% in `I1` and 2.9% in `I0` — the number arrives and changes neither the count nor the timing of the decisions. Under enforcement the same decisions are made and then refused before it can kill the episode: 0.0% of `E` calls start on such a budget, because a call the reserve cannot pay for is never admitted. The gain is not a change in judgement but a change in what is allowed to reach execution.
+**The decision itself.** Figure 8 reads the moment a call is started off every episode. If the informational arm changed what the agent does, its calls would sit further from the deadline than the unguarded arm's. They do not: the median call in `I1` starts with 125.5 s left, against 125.8 s in `I0`, and the two arms make 3.64 and 3.55 calls per episode. Measured against the model's own request distribution, the share of calls started on a budget too short to pay for a typical slow request is 3.0% in `I1` and 2.6% in `I0` — the number arrives and changes neither the count nor the timing of the decisions. Under enforcement the same decisions are made and then refused before it can kill the episode: 0.0% of `E` calls start on such a budget, because a call the reserve cannot pay for is never admitted. The gain is not a change in judgement but a change in what is allowed to reach execution.
 
 ![Where calls are started](figures/fig8_s3_decisions.png)
 
 **Figure 8.** Where in the budget a call is started, heterogeneous family. (a) The informational arm `I1` against the unguarded baseline `I0`: the same distribution, bin for bin. (b) The same baseline against the enforced reserve `E`, which never starts a call in the shaded last 30 s.
 
-**Regime dependence, and a control that failed.** Across the three stochastic regimes the enforcement gain was fast +7.70 [+3.00, +11.90], slow +5.60 [+4.45, +6.72] and drifting +4.78 [-0.43, +10.57]; in the near-deterministic `light_tail` control, where a reserve against tool-cost variance would have nothing to protect, it was +8.10 [+5.41, +10.62] — the largest of the four, so the pre-registered negative control does not behave as a control. That is informative rather than merely inconvenient: it rules out the reading that enforcement helps by absorbing the variance of tool durations, and locates the variance it does absorb on the request side, where the agent pays for its own inference.
+**Regime dependence, and a control that failed.** Across the three stochastic regimes the enforcement gain was fast +6.62 [+3.80, +9.39], slow +4.32 [+3.28, +5.30] and drifting +6.12 [+3.71, +8.52]; in the near-deterministic `light_tail` control, where a reserve against tool-cost variance would have nothing to protect, it was +7.68 [+5.98, +9.41] — the largest of the four, so the pre-registered negative control does not behave as a control. That is informative rather than merely inconvenient: it rules out the reading that enforcement helps by absorbing the variance of tool durations, and locates the variance it does absorb on the request side, where the agent pays for its own inference.
 
 ![Enforcement by regime](figures/fig9_s3_regime.png)
 
@@ -364,12 +366,35 @@ Enforcement is not uniformly useful. Table 10 splits the heterogeneous family by
 
 | Model | request p50 (s) | request p90 (s) | unguarded deaths | items in hand at death | I0 banked | E banked | E−I0 |
 |---|---:|---:|---:|---:|---:|---:|---:|
-| GLM | 7.7 | 15.0 | 12% | 8.0 | 24.2 | 23.6 | +0.16 |
-| Qwen | 19.1 | 56.0 | 93% | 1.2 | 0.1 | 5.9 | +5.71 |
-| DeepSeek | 8.2 | 24.0 | 29% | 6.0 | 15.6 | 24.6 | +8.99 |
-| MiMo | 15.2 | 31.6 | 62% | 5.0 | 5.9 | 16.3 | +9.47 |
+| GLM | 7.2 | 14.0 | 7% | 8.2 | 24.6 | 24.5 | -0.31 |
+| Qwen | 19.3 | 58.1 | 88% | 1.4 | 0.5 | 5.7 | +5.27 |
+| DeepSeek | 8.1 | 20.4 | 18% | 6.4 | 16.8 | 25.1 | +9.22 |
+| MiMo | 14.2 | 30.0 | 35% | 5.3 | 6.9 | 17.8 | +10.23 |
 
-The two ends fail for opposite reasons. GLM's median request takes 7.7 s, its deadline death rate is 12%, and enforcement adds +0.16: there is nothing to protect. Qwen is the opposite — 19.1 s per request, 93% of unguarded episodes die — yet it gains only +5.71, because a dying episode had fetched just 1.2 items. Enforcement converts work already done into points; where the model never gets far enough for that work to exist, the harness has nothing to save. The largest gains sit in between, at MiMo (+9.47, 5.0 items in hand at death), and the ordering is driven by the shapedness of the request distribution rather than by its median: a fast median with a heavy tail is protected as reliably as uniformly slow requests. This is the tail that the `light_tail` control isolates, and it belongs to the model, not to the tool.
+The two ends fail for opposite reasons. GLM's median request takes 7.2 s, its deadline death rate is 7%, and enforcement adds -0.31: there is nothing to protect. Qwen is the opposite — 19.3 s per request, 88% of unguarded episodes die — yet it gains only +5.27, because a dying episode had fetched just 1.4 items. Enforcement converts work already done into points; where the model never gets far enough for that work to exist, the harness has nothing to save. The largest gains sit in between, at MiMo (+10.23, 5.3 items in hand at death), and the ordering is driven by the shapedness of the request distribution rather than by its median: a fast median with a heavy tail is protected as reliably as uniformly slow requests. This is the tail that the `light_tail` control isolates, and it belongs to the model, not to the tool.
+
+### 5.6 What the points were made of
+
+Points are credited at submission. A collection that is never handed in counts for nothing, so the same work can be worth 22 points or zero depending only on whether someone called stop. Table 11 opens the score into the work collected, the share of it forfeited, and the price per point.
+
+**Table 11. Study 3, collected work, forfeited work and cost (heterogeneous and uniform families).**
+
+| Family | Arm | Banked | of ceiling | Collected | Forfeited share | Submitted | Median slack (s) | mUSD/point | All-zero cells |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Heterogeneous | I0 | 12.31 | 0.26 | 21.5 | 0.55 | 0.45 | 9 | 0.33 | 0.36 |
+| Heterogeneous | I1 | 9.70 | 0.20 | 21.4 | 0.64 | 0.35 | 8 | 0.44 | 0.44 |
+| Heterogeneous | C | 17.52 | 0.36 | 21.2 | 0.22 | 0.76 | 19 | 0.22 | 0.10 |
+| Heterogeneous | E | 18.31 | 0.38 | 20.4 | 0.09 | 0.91 | 40 | 0.18 | 0.01 |
+| Heterogeneous | O | 19.00 | 0.39 | 20.5 | 0.08 | 0.92 | 36 | 0.18 | 0.01 |
+| Uniform | I0 | 2.47 | 0.15 | 4.9 | 0.62 | 0.38 | 8 | 1.48 | 0.43 |
+| Uniform | I1 | 2.64 | 0.16 | 5.3 | 0.63 | 0.37 | 7 | 1.44 | 0.46 |
+| Uniform | C | 4.77 | 0.29 | 5.5 | 0.19 | 0.80 | 21 | 0.68 | 0.07 |
+| Uniform | E | 4.91 | 0.30 | 5.3 | 0.08 | 0.92 | 37 | 0.53 | 0.01 |
+| Uniform | O | 4.93 | 0.31 | 5.2 | 0.07 | 0.93 | 38 | 0.53 | 0.01 |
+
+The five arms collect almost exactly the same amount of work: 20.4 to 21.5 points per episode in the heterogeneous family, and 4.9 to 5.5 in the uniform one. What differs is the share of that work that is handed in: 64% of it is forfeited under I1 and 55% under I0, against 8% under O. Enforcement does not make the agent search better; it stops the search from being thrown away, which is why changing what the agent is told moves the score by little or nothing while changing who may stop moves it by several points in every regime.
+
+Unfinished work is also the expensive kind. A wasted episode is billed in full, so the cost per banked point runs at 0.33 milli-USD under I0 and 0.18 under E (about 1.9× more expensive when nobody enforces anything, Table 11). Reliability moves the same way: 36% of I0 cells never score at all, against 1% of O cells, so enforcement buys a floor as well as a mean.
 
 ## 6. Discussion
 
@@ -408,7 +433,7 @@ Study 1 failed both. Study 2 satisfied the first by construction and failed the 
 
 ## 8. Conclusion
 
-We tested a simple and widely used interface idea — tell the agent how long its tools have been taking — in three controlled studies totalling 3,703 episodes. The first produced a null that can be explained from the design: the task had no decision leverage and the summary was a function of data already on screen. The second gave the intervention real leverage, verified that the information reached the agent (reference error 8.0 s against 1.5 s for a perfect oracle), and still found nothing: the adaptive summary did not beat the static prior, the stale prior did not hurt, and the perfect oracle did not help. Agents given a stale prior performed like agents given the truth, because both read the cost off the clock.
+We tested a simple and widely used interface idea — tell the agent how long its tools have been taking — in three controlled studies totalling 6,269 episodes. The first produced a null that can be explained from the design: the task had no decision leverage and the summary was a function of data already on screen. The second gave the intervention real leverage, verified that the information reached the agent (reference error 8.0 s against 1.5 s for a perfect oracle), and still found nothing: the adaptive summary did not beat the static prior, the stale prior did not hurt, and the perfect oracle did not help. Agents given a stale prior performed like agents given the truth, because both read the cost off the clock.
 
 The third study says where that leaves us. The quantity an agent cannot read off its own clock is its own inference time, and it is exactly the quantity that determines whether the last call fits. Yet telling the agent that number changed nothing, while *enforcing* a reserve built from it converted deadline failures into scored episodes — and it made little difference whether the reserve was the harness's estimate or the agent's own declaration. The practical recommendation is therefore not a better summary and not a different owner of the estimate, but a different kind of object in the loop: the model may decide what to fetch, but something must be able to stop it.
 

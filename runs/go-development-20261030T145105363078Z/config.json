@@ -1,0 +1,139 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws stratified by family",
+    "individual_intervals": "exploratory",
+    "models": "fixed equal weight",
+    "primary": "fast_to_slow C-B deadline success",
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_s": 150,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.0012650420012505,
+        2.0012282080006116,
+        2.0012211660014145
+      ],
+      "lookup_rows": [
+        2.0012685830006376,
+        2.0012649169984797,
+        2.0012644159996853
+      ],
+      "read_document": [
+        2.00126525000087,
+        2.001265165999939,
+        2.00126633400032
+      ],
+      "search": [
+        2.0012614999996003,
+        2.001263584001208,
+        2.0012636669998756
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.000859084000695,
+        15.000854916999742,
+        15.000851458999023
+      ],
+      "lookup_rows": [
+        15.00085958300042,
+        15.000858999999764,
+        15.000858750001498
+      ],
+      "read_document": [
+        15.000856167000165,
+        15.000857582999743,
+        15.000858416999108
+      ],
+      "search": [
+        15.000842041999931,
+        15.000851416001751,
+        15.000853833000292
+      ]
+    }
+  },
+  "calibration_method": "three concurrent measurements per tool outside episodes",
+  "change_reason": "Native SSE repair re-diagnosed; common budget 180->150 follows pre-registered pooled DeepSeek ceiling rule; fixed 12s change and same three models/prompt/output limit. Old nonstream data kept separate.",
+  "code_hash": "454c867e33967883f2d0891b5502a1e38d477f0d4c5cf6e490bef75f382be6a1",
+  "concurrency": {
+    "global": 6,
+    "per_model": 2
+  },
+  "fast_s": 2,
+  "limits": {
+    "max_reported_allowance_per_model": 3.0,
+    "max_requests_per_model": 2000
+  },
+  "manifest_hash": "b0a9ef4261e896afb380a2afcdd91e5a1c01b8df8434cb8fd708f7ba7db9b6c5",
+  "manifest_seed": 20261030,
+  "max_steps": 20,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "stream": true,
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast",
+    "fast_to_slow",
+    "slow_to_fast"
+  ],
+  "prompt": "You are participating in a local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"...\",\"arguments\":{...}} or {\"type\":\"submit\",\"answer\":{\"value\":number,\"evidence_ids\":[\"...\"]}}. Use only the experiment tools described in the observation, by requesting a JSON action; never execute tools yourself. The host executes them and returns results in history. Submit only when you have the required answer and evidence. There are no other resources or tools available. A duration reference is based on past observations and does not guarantee future duration. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution",
+  "purpose": "development only; no condition-effect inference",
+  "quality_policy": "go_quality_v2; both-phase same-tool observation descriptive; primary variability pooled by model",
+  "readiness_evidence": {
+    "diagnostic_batch": "/Users/atlas/Programs/codex_programs/time-agent/runs/go-diagnostic-20261030T144203449950Z",
+    "diagnostic_config_hash": "a60d6d0dcb0cfacd8a85e7eb4e35c1fd457c375fc83c51d59e5fcfc0bb725f2a",
+    "verification": {
+      "path": "/Users/atlas/Programs/codex_programs/time-agent/reports/go_verification-20261030T143950774700Z.json",
+      "sha256": "f858967c093f03a586ab5cac6421d9deff8b29965754da7f60a55f0984495cae"
+    }
+  },
+  "shift_fraction": 0.08,
+  "slow_s": 15,
+  "stage": "development",
+  "streaming": true,
+  "task_hash": "705a29cfa5bb6749f3b2e18d8574aad28df6b7ca9032f6fa391964757c797397",
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  },
+  "window": 3
+}

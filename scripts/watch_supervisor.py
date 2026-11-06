@@ -61,7 +61,36 @@ def start_supervisor():
         stdout=handle, stderr=handle, start_new_session=True)
 
 
+def assemble_paper():
+    """Once the matrix is complete, build the final manuscript without a human present."""
+    marker = BATCH / 'AUTO_ASSEMBLED'
+    if marker.exists():
+        return
+    log('batch complete; assembling the final manuscript')
+    handle = open('/tmp/s3_auto_assemble.log', 'a')
+    proc = subprocess.run(['.venv/bin/python', '-m', 'scripts.assemble_paper_s3', str(BATCH)],
+                          stdout=handle, stderr=handle, timeout=3600)
+    log(f'assembly finished with code {proc.returncode}')
+    if proc.returncode == 0:
+        marker.write_text('assembled by watch_supervisor')
+
+
 def main():
+    once = '--once' in sys.argv
+    if once:
+        done, total = episodes(), planned()
+        for marker, reason in (('STOP_SUPERVISOR', 'supervisor stopped itself'),
+                               ('AUTH_FAILED.json', 'credential rejected')):
+            if (BATCH / marker).exists():
+                log(f'{reason} ({marker}); nothing to do')
+                return 2
+        if done >= total:
+            assemble_paper()
+            return 0
+        if not supervisor_running():
+            log(f'supervisor absent ({done}/{total}); restarting')
+            start_supervisor()
+        return 0
     log(f'watchdog start: {BATCH} every {INTERVAL}s')
     misses = 0
     restarts = 0

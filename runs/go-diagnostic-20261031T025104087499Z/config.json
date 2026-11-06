@@ -1,0 +1,139 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws stratified by family",
+    "individual_intervals": "exploratory",
+    "models": "fixed equal weight",
+    "primary": "fast_to_slow C-B deadline success",
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_s": 300,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.0025506669990136,
+        2.002564333000919,
+        2.0025680830003694
+      ],
+      "lookup_rows": [
+        2.002626166002301,
+        2.0026297080039512,
+        2.002629333001096
+      ],
+      "read_document": [
+        2.002652709001268,
+        2.002654790994711,
+        2.002662708000571
+      ],
+      "search": [
+        2.002709374995902,
+        2.0026765000002342,
+        2.0026607500039972
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.001327208003204,
+        15.00132237499929,
+        15.001320082999882
+      ],
+      "lookup_rows": [
+        15.001340957998764,
+        15.001348334000795,
+        15.001350957994873
+      ],
+      "read_document": [
+        15.00135258299997,
+        15.00135054099519,
+        15.001354124993668
+      ],
+      "search": [
+        15.001352332998067,
+        15.001353125000605,
+        15.001352915998723
+      ]
+    }
+  },
+  "calibration_method": "three concurrent measurements per tool outside episodes",
+  "change_reason": "Exact evidence contract clarification after reviewed GLM join evidence errors; continuous clock retained; all models receive identical system instructions; no old data pooled",
+  "clock": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "guard_interval_s": 0.25,
+    "includes_suspend": true,
+    "platform": "darwin",
+    "protocol": "continuous_deadline_v1",
+    "resolution_s": 4.2000000000000006e-08,
+    "suspend_threshold_s": 1.0
+  },
+  "code_hash": "3db205ecb730957a049a05bbad82e35a8bbce7f818d04e010c530dffd4a0b3ce",
+  "concurrency": {
+    "global": 6,
+    "per_model": 2
+  },
+  "fast_s": 2,
+  "limits": {
+    "max_reported_allowance_per_model": 3.0,
+    "max_requests_per_model": 2000
+  },
+  "manifest_hash": "060fd0bfe16dddd36f9508304e85b3091604b9041e8843438eb5f5c872e25b80",
+  "manifest_seed": 20261030,
+  "max_steps": 20,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "stream": true,
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast"
+  ],
+  "prompt": "You are participating in a local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"...\",\"arguments\":{...}} or {\"type\":\"submit\",\"answer\":{\"value\":number,\"evidence_ids\":[\"...\"]}}. Use only the experiment tools described in the observation, by requesting a JSON action; never execute tools yourself. The host executes them and returns results in history. Submit only when you have the required answer and evidence. evidence_ids must be the exact set of distinct source IDs supporting the requested result, without extra or duplicate IDs. For a join, include only rows surviving both the join and the requested filters; exclude inspected rows with no qualifying match. There are no other resources or tools available. A duration reference is based on past observations and does not guarantee future duration. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution",
+  "purpose": "development only; no condition-effect inference",
+  "quality_policy": "go_quality_v2; both-phase same-tool observation descriptive; primary variability pooled by model",
+  "readiness_evidence": {},
+  "shift_fraction": 0.2,
+  "slow_s": 15,
+  "stage": "diagnostic",
+  "streaming": true,
+  "task_hash": "39e306b936cd3790dd321326171d8368bdf9c5eea6a8aef8fc0c31b7a6a980e6",
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  },
+  "window": 3
+}

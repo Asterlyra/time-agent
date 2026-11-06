@@ -1,0 +1,111 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws, stratified by profile",
+    "individual_intervals": "exploratory, uncorrected",
+    "primary": "fast_to_slow score difference C-B, equal weight over the three models",
+    "secondary": [
+      "B-A",
+      "C-A",
+      "O-A",
+      "O-B",
+      "C-B per other profile"
+    ],
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_by_model": {
+    "deepseek-v4.1-flash": 200.0,
+    "glm-5.3-flash": 200.0,
+    "qwen3.8-flash": 200.0
+  },
+  "budget_s": 200.0,
+  "calibration": {
+    "fast": {
+      "fetch": [
+        8.002377458004048,
+        8.002361167018535,
+        8.002360084006796
+      ]
+    },
+    "slow": {
+      "fetch": [
+        60.00233545800438,
+        60.00230116600869,
+        60.00228491600137
+      ]
+    }
+  },
+  "calibration_method": "host injection path measured outside episodes, three samples per phase",
+  "change_reason": "preregistered S2 formal batch v2: same plan, driver now has a resume path for host suspend",
+  "clock": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "guard_interval_s": 0.25,
+    "includes_suspend": true,
+    "platform": "darwin",
+    "protocol": "continuous_deadline_v1",
+    "resolution_s": 4.2000000000000006e-08,
+    "suspend_threshold_s": 1.0
+  },
+  "code_hash": "2786bddfb8ad3460486b18ede5a342fc4f66fddb7f1ae0d604f0bb172e418e00",
+  "concurrency": {
+    "global": 6,
+    "per_model": 2
+  },
+  "conditions": [
+    "A",
+    "B",
+    "C",
+    "O"
+  ],
+  "fast_s": 8.0,
+  "item_count": 20,
+  "limits": {
+    "max_reported_allowance_per_model": 8.0,
+    "max_requests_per_model": 12000
+  },
+  "manifest_hash": "1b8aad203c31860b1c2c2eba557f6515bb1a49470132ecfee9d3485661f60b33",
+  "manifest_seed": 20261102,
+  "max_steps": 32,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "stream": true,
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast",
+    "fast_to_slow",
+    "drift_up"
+  ],
+  "prompt": "You are participating in a timed local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"fetch\",\"arguments\":{\"item_id\":\"K03\"}} or {\"type\":\"submit\"}. The host executes tools; you never execute them yourself. Each tool call and each submission costs real wall-clock time from a fixed budget, and the time a call takes may change during the episode. Submitting ends the episode: the host scores every item you have already fetched, one point per item, and nothing else. If the budget expires before a submission is processed, the episode scores zero and every fetched item is lost. Fetched items stay available in the observation under collected_items, so you never need to restate them. Maximise the number of items you have collected at the moment your submission is processed, before the deadline. A duration reference, when present, summarises past observations and does not guarantee the duration of a future call. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution; partial-credit submission",
+  "purpose": "frozen formal S2 experiment",
+  "scoring": {
+    "no_submission": 0,
+    "per_correct_item": 1,
+    "unsubmitted": 0,
+    "wrong": 0
+  },
+  "shift_fraction": 0.3,
+  "slow_s": 60.0,
+  "stage": "formal",
+  "streaming": true,
+  "study": "S2-deadline-partial-credit",
+  "task_hash": "c1ac034852baccf8e93ff993e0ad97483506b75dff4332ca83edbe0426dd93df",
+  "tasks_in_manifest": 12,
+  "tool_schemas": {
+    "fetch": {
+      "arguments": {
+        "item_id": "编号字符串，例如 K03"
+      },
+      "description": "获取指定编号的数值。每次调用只返回一个编号，并消耗一段事先未知的时间。"
+    }
+  },
+  "window": 1
+}

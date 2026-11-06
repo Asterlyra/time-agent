@@ -1,6 +1,6 @@
 """Measure tool delay samples outside episodes using synthetic public-only inputs."""
 import asyncio
-import time
+from .elapsed_clock import EpisodeClock
 from tasks.data import call_tool
 
 CASES = {
@@ -16,12 +16,14 @@ async def calibrate(names, target_s, repeats=3, tool_call=call_tool):
         raise ValueError('invalid calibration settings')
     async def sample(name):
         public, args = CASES[name]
-        start = time.monotonic()
+        clock = EpisodeClock()
         result = tool_call(public, name, args)
         if 'error' in result:
             raise RuntimeError('calibration tool failed')
-        await asyncio.sleep(max(0, target_s - (time.monotonic() - start)))
-        return time.monotonic() - start
+        await clock.wait(asyncio.sleep(max(0, target_s - clock.elapsed())),
+                         clock.start + target_s + 5)
+        clock.check()
+        return clock.elapsed()
     # Separate samples are measured concurrently, outside task budgets.
     return {name: list(values) for name, values in zip(names, await asyncio.gather(
         *(asyncio.gather(*(sample(name) for _ in range(repeats))) for name in names)))}

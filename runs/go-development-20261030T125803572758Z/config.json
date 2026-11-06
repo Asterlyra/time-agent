@@ -1,0 +1,136 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws stratified by family",
+    "individual_intervals": "exploratory",
+    "models": "fixed equal weight",
+    "primary": "fast_to_slow C-B deadline success",
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_s": 180.0,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.0011538329999894,
+        2.001123583000208,
+        2.001111916999889
+      ],
+      "lookup_rows": [
+        2.0011697080003614,
+        2.0011637079996945,
+        2.0011581249996198
+      ],
+      "read_document": [
+        2.0011772089997066,
+        2.001173249999738,
+        2.001170375000129
+      ],
+      "search": [
+        2.0011901249999937,
+        2.001186959000279,
+        2.0011799999997493
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.001127583999732,
+        15.00112187500008,
+        15.001116207999985
+      ],
+      "lookup_rows": [
+        15.001133249999839,
+        15.001130957999976,
+        15.001129207999838
+      ],
+      "read_document": [
+        15.001135125000019,
+        15.001134625000304,
+        15.001133916999606
+      ],
+      "search": [
+        15.001130958999966,
+        15.00113520800005,
+        15.001135291000082
+      ]
+    }
+  },
+  "calibration_method": "three concurrent measurements per tool outside episodes",
+  "change_reason": "Diagnostic passed 17/18. GLM completed in 18.7-32.6 seconds and earliest last-tool start was 13.6 seconds; move wall-clock change to 12 seconds using solvability/exposure evidence only, retaining 180-second budget and all three models.",
+  "code_hash": "52c2804983bf31a04079e5192f34013d85cdd7cb4296553e380e055f8905c9aa",
+  "concurrency": {
+    "global": 3,
+    "per_model": 1
+  },
+  "fast_s": 2,
+  "limits": {
+    "max_reported_allowance_per_model": 3.0,
+    "max_requests_per_model": 2000
+  },
+  "manifest_hash": "b0a9ef4261e896afb380a2afcdd91e5a1c01b8df8434cb8fd708f7ba7db9b6c5",
+  "manifest_seed": 20261030,
+  "max_steps": 20,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast",
+    "fast_to_slow",
+    "slow_to_fast"
+  ],
+  "prompt": "You are participating in a local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"...\",\"arguments\":{...}} or {\"type\":\"submit\",\"answer\":{\"value\":number,\"evidence_ids\":[\"...\"]}}. Use only the experiment tools described in the observation, by requesting a JSON action; never execute tools yourself. The host executes them and returns results in history. Submit only when you have the required answer and evidence. There are no other resources or tools available. A duration reference is based on past observations and does not guarantee future duration. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution",
+  "purpose": "development only; no condition-effect inference",
+  "readiness_evidence": {
+    "diagnostic_batch": "/Users/atlas/Programs/codex_programs/time-agent/runs/go-diagnostic-20261030T124348352129Z",
+    "diagnostic_config_hash": "b446758cae35a569ec93059f6355f4b85f72c9e379edddc32cb8423b388de5f9",
+    "verification": {
+      "path": "/Users/atlas/Programs/codex_programs/time-agent/reports/go_verification-20261030T125735848771Z.json",
+      "sha256": "d59fed39744b46da65b97dba7ba4c1d5411241ffd386e910b0067961ef208d43"
+    }
+  },
+  "shift_fraction": 0.06666666666666667,
+  "slow_s": 15,
+  "stage": "development",
+  "task_hash": "705a29cfa5bb6749f3b2e18d8574aad28df6b7ca9032f6fa391964757c797397",
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  },
+  "window": 3
+}

@@ -1,0 +1,93 @@
+{
+  "analysis": {
+    "bootstrap": "10000 block-cluster paired draws, seed 911",
+    "interim": "two-look Pocock boundary, one-sided z >= 1.875 at each look",
+    "primary": "hetero family, arms E minus I0, equal weight over the four models",
+    "secondary": [
+      "E-O",
+      "C-I0",
+      "C-E",
+      "I1-I0",
+      "per family",
+      "per regime, in particular light_tail as the negative control"
+    ]
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budgets": {
+    "test-hetero-00": 180.0,
+    "test-uniform-00": 180.0
+  },
+  "change_reason": "pilot: arm separation check with real models before the 48h batch",
+  "clock": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "guard_interval_s": 0.25,
+    "includes_suspend": true,
+    "platform": "darwin",
+    "protocol": "continuous_deadline_v1",
+    "resolution_s": 4.2000000000000006e-08,
+    "suspend_threshold_s": 1.0
+  },
+  "code_hash": "e5aa37e8bd51fd3a05ac0e92cfb336605ef2e0503ca30a16ca497427e344574c",
+  "concurrency": {
+    "global": 8,
+    "per_model": 2
+  },
+  "conditions": [
+    "I0",
+    "I1",
+    "C",
+    "E",
+    "O"
+  ],
+  "families": [
+    "uniform",
+    "hetero"
+  ],
+  "manifest_hash": "4b7de36942be786ea6849a1532030352fcf40fbb34df0d3a49f7d269d38ef20f",
+  "manifest_seed": 20261103,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "stream": true,
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash",
+    "mimo-v2.6-flash"
+  ],
+  "part": "A",
+  "prompt": "You are participating in a timed local experiment. Return exactly one JSON object as your final response, choosing one of: {\"type\":\"tool\",\"name\":\"fetch\",\"arguments\":{\"item_id\":\"K03\"}}, {\"type\":\"submit\"}, or {\"type\":\"commit\",\"reserve_s\":12}. Each fetch banks the points of one item and costs real wall-clock time drawn from a heavy-tailed distribution, so occasional calls are very long; the costs are not known in advance and may differ between item sizes and across the episode. A submission is processed as one more request and ends the episode: the host scores every item you have already banked. If the budget expires before your submission is processed, the episode scores zero and everything is lost. The host may refuse a fetch that cannot finish in time, and may submit on your behalf once the remaining budget reaches the reserve; any such event is reported in the history. Maximise the points banked at the moment your submission is processed. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; host-scored submission; harness may deny or force",
+  "regime_rule": {
+    "drift_heavy": "multiplier grows 1 to 3 across the episode, sigma 1.0",
+    "fast_heavy": "multiplier 1.0, sigma 1.0",
+    "light_tail": "multiplier 1.0, sigma 0.15 (nearly deterministic)",
+    "slow_heavy": "multiplier 3.0, sigma 1.0"
+  },
+  "regimes": [
+    "light_tail",
+    "fast_heavy",
+    "slow_heavy",
+    "drift_heavy"
+  ],
+  "repeats_per_model": {
+    "deepseek-v4.1-flash": 3,
+    "glm-5.3-flash": 3,
+    "mimo-v2.6-flash": 3,
+    "qwen3.8-flash": 2
+  },
+  "sigma": 1.0,
+  "study": "S3-information-commitment-enforcement",
+  "task_hash": "ea0037054d904e33a863e35e2f30ec9d68a80a64d1b5bae955acd122c7967d7f",
+  "tasks_per_family": 1,
+  "tool_schemas": {
+    "fetch": {
+      "arguments": {
+        "item_id": "编号字符串，例如 K03"
+      },
+      "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+    }
+  }
+}

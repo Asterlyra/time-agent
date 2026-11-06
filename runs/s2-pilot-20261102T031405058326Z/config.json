@@ -1,0 +1,109 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws, stratified by profile",
+    "individual_intervals": "exploratory, uncorrected",
+    "primary": "fast_to_slow score difference C-B, equal weight over the three models",
+    "secondary": [
+      "B-A",
+      "C-A",
+      "O-A",
+      "O-B",
+      "C-B per other profile"
+    ],
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_by_model": {
+    "deepseek-v4.1-flash": 160.0,
+    "glm-5.3-flash": 160.0,
+    "qwen3.8-flash": 200.0
+  },
+  "budget_s": 100.0,
+  "calibration": {
+    "fast": {
+      "fetch": [
+        2.5024862090067472,
+        2.50247458301601,
+        2.50247183299507
+      ]
+    },
+    "slow": {
+      "fetch": [
+        45.000496082997415,
+        45.00046412498341,
+        45.00045320802019
+      ]
+    }
+  },
+  "calibration_method": "host injection path measured outside episodes, three samples per phase",
+  "change_reason": "pilot 2: host-scored stop, tool delay dominant over request jitter",
+  "clock": {
+    "clock": "CLOCK_MONOTONIC_RAW",
+    "guard_interval_s": 0.25,
+    "includes_suspend": true,
+    "platform": "darwin",
+    "protocol": "continuous_deadline_v1",
+    "resolution_s": 4.2000000000000006e-08,
+    "suspend_threshold_s": 1.0
+  },
+  "code_hash": "14056a42623736fd6367ad997f0f0115ec1e945784e16c7fae3c1265414b6cb3",
+  "concurrency": {
+    "global": 6,
+    "per_model": 2
+  },
+  "conditions": [
+    "A",
+    "B",
+    "C",
+    "O"
+  ],
+  "fast_s": 2.5,
+  "item_count": 20,
+  "limits": {
+    "max_reported_allowance_per_model": 2.0,
+    "max_requests_per_model": 1200
+  },
+  "manifest_hash": "82a89eb560af601d02b499f429cb9ea2bf5b52027584fc48a07bc8790f05a3d6",
+  "manifest_seed": 20261102,
+  "max_steps": 32,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "stream": true,
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "fast_to_slow"
+  ],
+  "prompt": "You are participating in a timed local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"fetch\",\"arguments\":{\"item_id\":\"K03\"}} or {\"type\":\"submit\"}. The host executes tools; you never execute them yourself. Each tool call and each submission costs real wall-clock time from a fixed budget, and the time a call takes may change during the episode. Submitting ends the episode: the host scores every item you have already fetched, one point per item, and nothing else. If the budget expires before a submission is processed, the episode scores zero and every fetched item is lost. Fetched items stay available in the observation under collected_items, so you never need to restate them. Maximise the number of items you have collected at the moment your submission is processed, before the deadline. A duration reference, when present, summarises past observations and does not guarantee the duration of a future call. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution; partial-credit submission",
+  "purpose": "pilot only; parameter calibration, no effect inference",
+  "scoring": {
+    "no_submission": 0,
+    "per_correct_item": 1,
+    "unsubmitted": 0,
+    "wrong": 0
+  },
+  "shift_fraction": 0.35,
+  "slow_s": 45.0,
+  "stage": "pilot",
+  "streaming": true,
+  "study": "S2-deadline-partial-credit",
+  "task_hash": "cbeddacee5e0852d613961775f9bafb3bcf083bb3423afc9711a96dee0631d03",
+  "tasks_in_manifest": 1,
+  "tool_schemas": {
+    "fetch": {
+      "arguments": {
+        "item_id": "编号字符串，例如 K03"
+      },
+      "description": "获取指定编号的数值。每次调用只返回一个编号，并消耗一段事先未知的时间。"
+    }
+  },
+  "window": 3
+}

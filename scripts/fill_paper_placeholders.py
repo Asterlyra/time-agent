@@ -66,7 +66,7 @@ def main():
     claim = (f"that what changes deadline behaviour is enforcement rather than information: a "
              f"mechanically enforced reserve gains {fmt(e_i0['pooled'])} points while the same "
              f"information given to the agent {info_phrase(i1_i0, short=True)}")
-    done = s['n_episodes']
+    done = s['n_episodes'] - (s.get('n_archived_environment_failures') or 0)
     counts = {'[S3 EPISODES]': f'{done:,}', '[S3 DONE]': f'{done:,}',
               '[TOTAL EPISODES]': f'{1512 + done:,}'}
 

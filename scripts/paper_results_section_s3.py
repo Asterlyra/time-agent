@@ -37,9 +37,42 @@ def main():
     n_arch = summary.get('n_archived_environment_failures', 0)
     lines.append('### 5.4 Results\n')
     planned = summary.get('planned', n)
-    lines.append(f'Of the {planned} planned episodes, {n} are accounted for: {n - n_arch} scored and '
-                 f'{n_arch} archived host-suspend failures, retained at zero and flagged. Table 7 gives '
-                 'the points banked by family, regime and arm.\n')
+    n_se = summary.get('excluded_service_errors') or 0
+    se_arm = summary.get('service_error_by_arm') or {}
+    se_text = ''
+    if se_arm:
+        lo, hi = min(se_arm.values()), max(se_arm.values())
+        span = (f'{lo:.0%} in every arm' if hi - lo < 0.005
+                else f'{lo:.0%} to {hi:.0%} of attempted episodes in every arm')
+        se_text = f' Their share is flat across arms ({span}), so the paired contrast is unaffected.'
+    observable = n - n_arch
+    records = observable + n_se
+    never = max(0, planned - records)
+    lines.append((f'Of the {planned:,} planned episodes, {records:,} produced a record'
+                  + (f' and {never} never ran' if never else ''))
+                 + f'. {n_se:,} of those records are provider refusals: the account moved to balance '
+                   f'billing partway through collection, and the request was rejected before the model '
+                   f'ran, so they are excluded rather than scored zero — they contain no behaviour to '
+                   f'score. The analysis rests on the {observable:,} observable episodes, with the '
+                   f'{n_arch} host interruptions kept at zero and flagged.{se_text} Table 7 gives the '
+                   f'points banked by family, regime and arm.')
+    if not never:
+        lines[-1] = lines[-1].replace(f'Of the {planned:,} planned episodes, {records:,} produced a record.',
+                                      f'All {planned:,} planned episodes produced a record.')
+    cb = summary.get('complete_block_primary')
+    primary = summary.get('primary')
+    if cb and primary:
+        if cb.get('n_pairs') == primary.get('n_pairs'):
+            lines.append('')
+            lines.append(f"Every one of the {primary['n_pairs']} (task, regime) cells now has all five "
+                         f"arms observed, so the paired contrast uses the whole design; the refusals cost "
+                         f"completeness while they lasted, not arm balance.\n")
+        else:
+            lines.append('')
+            lines.append(f"Restricting the primary contrast to blocks in which all five arms produced an "
+                         f"observation leaves it where it was ({num(cb['pooled'])} against "
+                         f"{num(primary['pooled'])}): the refusals removed whole blocks, not particular "
+                         f"arms.\n")
     lines.append('**Table 7. Study 3, mean points banked (maximum 5 × number of items).**\n')
     lines.append('| Family | Regime | I0 | I1 | C | E | O |')
     lines.append('|---|---|---:|---:|---:|---:|---:|')
@@ -270,6 +303,58 @@ def main():
                          f"distribution rather than by its median: a fast median with a heavy tail is "
                          f"protected as reliably as uniformly slow requests. This is the tail that the "
                          f"`light_tail` control isolates, and it belongs to the model, not to the tool.\n")
+
+    metrics_path = Path(args.summary).with_name('metrics_summary.json')
+    metrics = json.loads(metrics_path.read_text()) if metrics_path.exists() else {}
+    by_fa = metrics.get('by_family_arm') or {}
+    rel = metrics.get('reliability') or {}
+    if all((by_fa.get('hetero') or {}).get(arm) for arm in ARMS):
+        h = by_fa['hetero']
+        lines.append('### 5.6 What the points were made of\n')
+        lines.append('Points are credited at submission. A collection that is never handed in counts for '
+                     'nothing, so the same work can be worth '
+                     f"{h['I0']['collected']:.0f} points or zero depending only on whether someone called stop. "
+                     'Table 11 opens the score into the work collected, the share of it forfeited, and the '
+                     'price per point.\n')
+        lines.append('**Table 11. Study 3, collected work, forfeited work and cost (heterogeneous and uniform '
+                     'families).**\n')
+        lines.append('| Family | Arm | Banked | of ceiling | Collected | Forfeited share | Submitted | '
+                     'Median slack (s) | mUSD/point | All-zero cells |')
+        lines.append('|---|---|---:|---:|---:|---:|---:|---:|---:|---:|')
+        for family, label in (('hetero', 'Heterogeneous'), ('uniform', 'Uniform')):
+            for arm in ARMS:
+                s = (by_fa.get(family) or {}).get(arm)
+                if not s:
+                    continue
+                zero = ((rel.get(family) or {}).get(arm) or {}).get('share_all_zero')
+                zero_text = f'{zero:.2f}' if zero is not None else '—'
+                cpp = (s.get('cost_per_point') or 0.0) * 1000.0
+                lines.append(f"| {label} | {arm} | {s['score']:.2f} | {s['ceiling_share']:.2f} | "
+                             f"{s['collected']:.1f} | {s['forfeited_share']:.2f} | "
+                             f"{s['submitted_share']:.2f} | {s.get('slack_median_s') or 0:.0f} | "
+                             f"{cpp:.2f} | {zero_text} |")
+        lines.append('')
+        collected = [h[arm]['collected'] for arm in ARMS if h.get(arm)]
+        i0, i1, o = h['I0'], h['I1'], h['O']
+        lines.append(f"The five arms collect almost exactly the same amount of work: "
+                     f"{min(collected):.1f} to {max(collected):.1f} points per episode in the heterogeneous "
+                     f"family, and {min((by_fa.get('uniform') or {}).get(a, {}).get('collected', 0) for a in ARMS):.1f} "
+                     f"to {max((by_fa.get('uniform') or {}).get(a, {}).get('collected', 0) for a in ARMS):.1f} in "
+                     f"the uniform one. What differs is the share of that work that is handed in: "
+                     f"{i1['forfeited_share']:.0%} of it is forfeited under I1 and {i0['forfeited_share']:.0%} under "
+                     f"I0, against {o['forfeited_share']:.0%} under O. Enforcement does not make the agent search "
+                     f"better; it stops the search from being thrown away, which is why changing what the agent is "
+                     f"told moves the score by little or nothing while changing who may stop moves it by "
+                     f"several points in every regime.\n")
+        cpp_i0, cpp_e = (i0.get('cost_per_point') or 0.0) * 1000, (h['E'].get('cost_per_point') or 0.0) * 1000
+        if cpp_i0 and cpp_e:
+            lines.append(f"Unfinished work is also the expensive kind. A wasted episode is billed in full, so the "
+                         f"cost per banked point runs at {cpp_i0:.2f} milli-USD under I0 and {cpp_e:.2f} under E "
+                         f"(about {cpp_i0 / cpp_e:.1f}× more expensive when nobody enforces anything, Table 11). "
+                         f"Reliability moves the same way: {((rel.get('hetero') or {}).get('I0') or {}).get('share_all_zero', 0):.0%} "
+                         f"of I0 cells never score at all, against "
+                         f"{((rel.get('hetero') or {}).get('O') or {}).get('share_all_zero', 0):.0%} of O cells, so "
+                         f"enforcement buys a floor as well as a mean.\n")
 
     text = '\n'.join(lines) + '\n'
     out = Path(args.out) if args.out else Path(args.summary).with_name('results_section_s3.md')

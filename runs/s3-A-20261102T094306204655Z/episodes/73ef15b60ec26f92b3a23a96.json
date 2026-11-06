@@ -1,0 +1,1569 @@
+{
+  "manifest": {
+    "block_id": "dfefdae6a020fff6",
+    "budget_s": 150.0,
+    "condition": "E",
+    "model_id": "deepseek-v4.1-flash",
+    "position": 2,
+    "regime": "drift_heavy",
+    "repeat": 1,
+    "run_id": "73ef15b60ec26f92b3a23a96",
+    "task_family": "hetero",
+    "task_id": "test-hetero-07",
+    "template_id": "hetero-v7"
+  },
+  "result": {
+    "budget_s": 150.0,
+    "clock": {
+      "clock": "CLOCK_MONOTONIC_RAW",
+      "guard_interval_s": 0.25,
+      "includes_suspend": true,
+      "platform": "darwin",
+      "protocol": "continuous_deadline_v1",
+      "resolution_s": 4.2000000000000006e-08,
+      "suspend_threshold_s": 1.0
+    },
+    "commit": null,
+    "deadline_success": true,
+    "denied_fetches": 2,
+    "elapsed_s": 126.69438333300059,
+    "end_utc": "2026-11-03T17:04:03.795801+00:00",
+    "events": [
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K03"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 6.49847237499489,
+              "response_bytes": 32092,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 121,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 8.701e-05,
+                "billed_tokens": {
+                  "cache_read": 640,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 38,
+                  "output": 229,
+                  "reasoning": 210
+                },
+                "billing_source": "go",
+                "completion_tokens": 229,
+                "cost": 0,
+                "list_cost": 0.00014502,
+                "prompt_tokens": 678,
+                "total_tokens": 907
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 0,
+                "items": {},
+                "points": 0,
+                "remaining_items": 16
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 18.0
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 0.0,
+                "remaining_s": 150.0
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 0.0002615830017020926,
+            "response_end_offset_s": 8.592971833000774,
+            "time_feedback_sample_offset_s": 0.0
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 0,
+            "items": {},
+            "points": 0,
+            "remaining_items": 16
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 18.0
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 0.0,
+            "remaining_s": 150.0
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 149.99977858299098,
+        "request_start_offset_s": 0.0002423330006422475,
+        "response_end_offset_s": 8.592971833000774,
+        "retry_count": 0,
+        "step_index": 0,
+        "time_feedback_sample_offset_s": 0.0002214170090155676,
+        "visible_history": []
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 1.965802207996603,
+        "sampled_duration_s": 1.965321813874412,
+        "step_index": 0,
+        "tool_arguments": {
+          "item_id": "K03"
+        },
+        "tool_end_offset_s": 10.560136125001009,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K03",
+          "value": 5
+        },
+        "tool_start_offset_s": 8.594333917004406
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K07"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 3.2668258329940727,
+              "response_bytes": 40615,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 153,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00013853,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 229,
+                  "output": 325,
+                  "reasoning": 306
+                },
+                "billing_source": "go",
+                "completion_tokens": 325,
+                "cost": 0,
+                "list_cost": 0.00023089,
+                "prompt_tokens": 741,
+                "total_tokens": 1066
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 1,
+                "items": {
+                  "K03": 5
+                },
+                "points": 5,
+                "remaining_items": 15
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 12.9
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 10.56,
+                "remaining_s": 139.44
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 10.561768000014126,
+            "response_end_offset_s": 16.77542912500212,
+            "time_feedback_sample_offset_s": 10.56
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 1,
+            "items": {
+              "K03": 5
+            },
+            "points": 5,
+            "remaining_items": 15
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 12.9
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 10.56,
+            "remaining_s": 139.44
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 139.4383733329887,
+        "request_start_offset_s": 10.561686417000601,
+        "response_end_offset_s": 16.77542912500212,
+        "retry_count": 0,
+        "step_index": 1,
+        "time_feedback_sample_offset_s": 10.561626667011296,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          }
+        ]
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 5.00211745800334,
+        "sampled_duration_s": 5.000890062566293,
+        "step_index": 1,
+        "tool_arguments": {
+          "item_id": "K07"
+        },
+        "tool_end_offset_s": 21.779065125010675,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K07",
+          "value": 5
+        },
+        "tool_start_offset_s": 16.776947667007335
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K10"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 5.58187879199977,
+              "response_bytes": 40843,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 154,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00015914,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 294,
+                  "output": 366,
+                  "reasoning": 347
+                },
+                "billing_source": "go",
+                "completion_tokens": 366,
+                "cost": 0,
+                "list_cost": 0.00026524,
+                "prompt_tokens": 806,
+                "total_tokens": 1172
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 2,
+                "items": {
+                  "K03": 5,
+                  "K07": 5
+                },
+                "points": 10,
+                "remaining_items": 14
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 12.9
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 21.78,
+                "remaining_s": 128.22
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 21.780054458009545,
+            "response_end_offset_s": 29.944246292012394,
+            "time_feedback_sample_offset_s": 21.78
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 2,
+            "items": {
+              "K03": 5,
+              "K07": 5
+            },
+            "points": 10,
+            "remaining_items": 14
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 12.9
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 21.78,
+            "remaining_s": 128.22
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 128.22001691699552,
+        "request_start_offset_s": 21.780010083006346,
+        "response_end_offset_s": 29.944246292012394,
+        "retry_count": 0,
+        "step_index": 2,
+        "time_feedback_sample_offset_s": 21.77998308300448,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          }
+        ]
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 5.053427374994499,
+        "sampled_duration_s": 5.052210510215332,
+        "step_index": 2,
+        "tool_arguments": {
+          "item_id": "K10"
+        },
+        "tool_end_offset_s": 34.99920720800583,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K10",
+          "value": 3
+        },
+        "tool_start_offset_s": 29.94577983301133
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K11"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 3.6642888330097776,
+              "response_bytes": 56151,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 213,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00019199,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 359,
+                  "output": 441,
+                  "reasoning": 422
+                },
+                "billing_source": "go",
+                "completion_tokens": 441,
+                "cost": 0,
+                "list_cost": 0.00031999,
+                "prompt_tokens": 871,
+                "total_tokens": 1312
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 3,
+                "items": {
+                  "K03": 5,
+                  "K07": 5,
+                  "K10": 3
+                },
+                "points": 13,
+                "remaining_items": 13
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 12.9
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 35.0,
+                "remaining_s": 115.0
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 35.00094166700728,
+            "response_end_offset_s": 42.552414208010305,
+            "time_feedback_sample_offset_s": 35.0
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 3,
+            "items": {
+              "K03": 5,
+              "K07": 5,
+              "K10": 3
+            },
+            "points": 13,
+            "remaining_items": 13
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 12.9
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 35.0,
+            "remaining_s": 115.0
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 114.99923537499853,
+        "request_start_offset_s": 35.000815000006696,
+        "response_end_offset_s": 42.552414208010305,
+        "retry_count": 0,
+        "step_index": 3,
+        "time_feedback_sample_offset_s": 35.000764625001466,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K10"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.053427374994499,
+            "tool_result": {
+              "item_id": "K10",
+              "value": 3
+            }
+          }
+        ]
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 3.928049333000672,
+        "sampled_duration_s": 3.926654507712938,
+        "step_index": 3,
+        "tool_arguments": {
+          "item_id": "K11"
+        },
+        "tool_end_offset_s": 46.48169758300355,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K11",
+          "value": 3
+        },
+        "tool_start_offset_s": 42.55364825000288
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K14"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 6.6940661249973346,
+              "response_bytes": 104287,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 395,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00034148,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 424,
+                  "output": 840,
+                  "reasoning": 821
+                },
+                "billing_source": "go",
+                "completion_tokens": 840,
+                "cost": 0,
+                "list_cost": 0.00056914,
+                "prompt_tokens": 936,
+                "total_tokens": 1776
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 4,
+                "items": {
+                  "K03": 5,
+                  "K07": 5,
+                  "K10": 3,
+                  "K11": 3
+                },
+                "points": 16,
+                "remaining_items": 12
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 12.9
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 46.48,
+                "remaining_s": 103.52
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 46.483546625007875,
+            "response_end_offset_s": 60.05907112501154,
+            "time_feedback_sample_offset_s": 46.48
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 4,
+            "items": {
+              "K03": 5,
+              "K07": 5,
+              "K10": 3,
+              "K11": 3
+            },
+            "points": 16,
+            "remaining_items": 12
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 12.9
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 46.48,
+            "remaining_s": 103.52
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 103.51666358299553,
+        "request_start_offset_s": 46.4833872080053,
+        "response_end_offset_s": 60.05907112501154,
+        "retry_count": 0,
+        "step_index": 4,
+        "time_feedback_sample_offset_s": 46.483336417004466,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K10"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.053427374994499,
+            "tool_result": {
+              "item_id": "K10",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K11"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 3.928049333000672,
+            "tool_result": {
+              "item_id": "K11",
+              "value": 3
+            }
+          }
+        ]
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 6.617574457995943,
+        "sampled_duration_s": 6.617094215903982,
+        "step_index": 4,
+        "tool_arguments": {
+          "item_id": "K14"
+        },
+        "tool_end_offset_s": 66.67817075000494,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K14",
+          "value": 3
+        },
+        "tool_start_offset_s": 60.060596292008995
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K02"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 1.7741534590022638,
+              "response_bytes": 83748,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 315,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00031709,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 489,
+                  "output": 756,
+                  "reasoning": 737
+                },
+                "billing_source": "go",
+                "completion_tokens": 756,
+                "cost": 0,
+                "list_cost": 0.00052849,
+                "prompt_tokens": 1001,
+                "total_tokens": 1757
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 5,
+                "items": {
+                  "K03": 5,
+                  "K07": 5,
+                  "K10": 3,
+                  "K11": 3,
+                  "K14": 3
+                },
+                "points": 19,
+                "remaining_items": 11
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 20.4
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 66.68,
+                "remaining_s": 83.32
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 66.67968900001142,
+            "response_end_offset_s": 74.22217554200324,
+            "time_feedback_sample_offset_s": 66.68
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 5,
+            "items": {
+              "K03": 5,
+              "K07": 5,
+              "K10": 3,
+              "K11": 3,
+              "K14": 3
+            },
+            "points": 19,
+            "remaining_items": 11
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 20.4
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 66.68,
+            "remaining_s": 83.32
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 83.32053483299387,
+        "request_start_offset_s": 66.67951820800954,
+        "response_end_offset_s": 74.22217554200324,
+        "retry_count": 0,
+        "step_index": 5,
+        "time_feedback_sample_offset_s": 66.67946516700613,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K10"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.053427374994499,
+            "tool_result": {
+              "item_id": "K10",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K11"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 3.928049333000672,
+            "tool_result": {
+              "item_id": "K11",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K14"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 6.617574457995943,
+            "tool_result": {
+              "item_id": "K14",
+              "value": 3
+            }
+          }
+        ]
+      },
+      {
+        "admitted": true,
+        "event_type": "tool",
+        "is_censored": false,
+        "observed_duration_s": 21.94241554099426,
+        "sampled_duration_s": 21.94122355302334,
+        "step_index": 5,
+        "tool_arguments": {
+          "item_id": "K02"
+        },
+        "tool_end_offset_s": 96.16579208300391,
+        "tool_name": "fetch",
+        "tool_result": {
+          "item_id": "K02",
+          "value": 5
+        },
+        "tool_start_offset_s": 74.22337654200965
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K08"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 3.0464088339940645,
+              "response_bytes": 182383,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 688,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00062678,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 554,
+                  "output": 1600,
+                  "reasoning": 1581
+                },
+                "billing_source": "go",
+                "completion_tokens": 1600,
+                "cost": 0,
+                "list_cost": 0.00104464,
+                "prompt_tokens": 1066,
+                "total_tokens": 2666
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 6,
+                "items": {
+                  "K02": 5,
+                  "K03": 5,
+                  "K07": 5,
+                  "K10": 3,
+                  "K11": 3,
+                  "K14": 3
+                },
+                "points": 24,
+                "remaining_items": 10
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 20.4
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 96.17,
+                "remaining_s": 53.83
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 96.16760820800846,
+            "response_end_offset_s": 111.41359308300889,
+            "time_feedback_sample_offset_s": 96.17
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 6,
+            "items": {
+              "K02": 5,
+              "K03": 5,
+              "K07": 5,
+              "K10": 3,
+              "K11": 3,
+              "K14": 3
+            },
+            "points": 24,
+            "remaining_items": 10
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 20.4
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 96.17,
+            "remaining_s": 53.83
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 53.83264304199838,
+        "request_start_offset_s": 96.16740933300753,
+        "response_end_offset_s": 111.41359308300889,
+        "retry_count": 0,
+        "step_index": 6,
+        "time_feedback_sample_offset_s": 96.16735695800162,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K10"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.053427374994499,
+            "tool_result": {
+              "item_id": "K10",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K11"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 3.928049333000672,
+            "tool_result": {
+              "item_id": "K11",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K14"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 6.617574457995943,
+            "tool_result": {
+              "item_id": "K14",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K02"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 21.94241554099426,
+            "tool_result": {
+              "item_id": "K02",
+              "value": 5
+            }
+          }
+        ]
+      },
+      {
+        "admitted": false,
+        "denial_reason": "按当前实测耗时，这次调用无法在截止前再完成一次提交，已拒绝。可以改取一个更便宜（体量更小）的编号，或立即提交。",
+        "event_type": "tool",
+        "is_censored": false,
+        "sampled_duration_s": 12.91341695654872,
+        "step_index": 6,
+        "tool_arguments": {
+          "item_id": "K08"
+        },
+        "tool_name": "fetch",
+        "tool_start_offset_s": 111.41477570800635
+      },
+      {
+        "action": {
+          "arguments": {
+            "item_id": "K04"
+          },
+          "name": "fetch",
+          "type": "tool"
+        },
+        "attempts": [
+          {
+            "adapter_diagnostics": {
+              "error_count": 0,
+              "finish_reason": "stop",
+              "first_response_byte_offset_s": 6.938751542009413,
+              "response_bytes": 126840,
+              "status_codes": [
+                200
+              ],
+              "stream_event_count": 479,
+              "streaming": true,
+              "timing_semantics": "complete_sse_terminal_parsed",
+              "usage": {
+                "allowance": 0.00045344,
+                "billed_tokens": {
+                  "cache_read": 512,
+                  "cache_write_1h": 0,
+                  "cache_write_5m": 0,
+                  "input": 624,
+                  "output": 1101,
+                  "reasoning": 1082
+                },
+                "billing_source": "go",
+                "completion_tokens": 1101,
+                "cost": 0,
+                "list_cost": 0.00075574,
+                "prompt_tokens": 1136,
+                "total_tokens": 2237
+              }
+            },
+            "observation": {
+              "collected_items": {
+                "count": 6,
+                "items": {
+                  "K02": 5,
+                  "K03": 5,
+                  "K07": 5,
+                  "K10": 3,
+                  "K11": 3,
+                  "K14": 3
+                },
+                "points": 24,
+                "remaining_items": 10
+              },
+              "harness_policy": {
+                "arm": "E",
+                "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+                "reserve_s": 22.9
+              },
+              "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+              "time_status": {
+                "budget_s": 150.0,
+                "elapsed_s": 111.42,
+                "remaining_s": 38.58
+              },
+              "tools": {
+                "fetch": {
+                  "arguments": {
+                    "item_id": "编号字符串，例如 K03"
+                  },
+                  "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+                }
+              }
+            },
+            "request_start_offset_s": 111.41602283300017,
+            "response_end_offset_s": 126.69199145800667,
+            "time_feedback_sample_offset_s": 111.42
+          }
+        ],
+        "event_type": "model_request",
+        "observation": {
+          "collected_items": {
+            "count": 6,
+            "items": {
+              "K02": 5,
+              "K03": 5,
+              "K07": 5,
+              "K10": 3,
+              "K11": 3,
+              "K14": 3
+            },
+            "points": 24,
+            "remaining_items": 10
+          },
+          "harness_policy": {
+            "arm": "E",
+            "note": "harness 会在剩余时间不足时拒绝调用并强制提交",
+            "reserve_s": 22.9
+          },
+          "question": "在时间预算内尽可能多地获取积分。每次 fetch 会消耗一段事先未知的时间，不同时刻的耗时不同；耗时服从重尾分布，偶尔会出现很长的调用。每个编号有公开的分值（1/3/5）与体量（S/M/L）；体量越大通常越慢，但各体量的真实快慢由本局独立决定，无法从上一局或其它编号推断。每次 fetch 成功后该编号的分值计入总分。你可以随时提交 {\"type\":\"submit\"}，宿主按已获取编号的分值之和结算。若预算耗尽时仍未提交，本局得 0 分，已获取的分数作废。本局时间预算 150 秒。目标：在预算耗尽前完成提交，并使已获取分值之和最大。编号表：K01(1分,M)、K02(5分,M)、K03(5分,S)、K04(1分,S)、K05(1分,S)、K06(1分,S)、K07(5分,S)、K08(5分,M)、K09(1分,M)、K10(3分,S)、K11(3分,S)、K12(5分,L)、K13(5分,L)、K14(3分,S)、K15(5分,M)、K16(5分,L)。",
+          "time_status": {
+            "budget_s": 150.0,
+            "elapsed_s": 111.42,
+            "remaining_s": 38.58
+          },
+          "tools": {
+            "fetch": {
+              "arguments": {
+                "item_id": "编号字符串，例如 K03"
+              },
+              "description": "获取指定编号：消耗一段未知时间，成功后该编号的分值计入总分。"
+            }
+          }
+        },
+        "remaining_at_request_s": 38.58418779198837,
+        "request_start_offset_s": 111.41585400000622,
+        "response_end_offset_s": 126.69199145800667,
+        "retry_count": 0,
+        "step_index": 7,
+        "time_feedback_sample_offset_s": 111.41581220801163,
+        "visible_history": [
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K03"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 1.965802207996603,
+            "tool_result": {
+              "item_id": "K03",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K07"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.00211745800334,
+            "tool_result": {
+              "item_id": "K07",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K10"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 5.053427374994499,
+            "tool_result": {
+              "item_id": "K10",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K11"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 3.928049333000672,
+            "tool_result": {
+              "item_id": "K11",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K14"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 6.617574457995943,
+            "tool_result": {
+              "item_id": "K14",
+              "value": 3
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K02"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "duration_s": 21.94241554099426,
+            "tool_result": {
+              "item_id": "K02",
+              "value": 5
+            }
+          },
+          {
+            "action": {
+              "arguments": {
+                "item_id": "K08"
+              },
+              "name": "fetch",
+              "type": "tool"
+            },
+            "error": "按当前实测耗时，这次调用无法在截止前再完成一次提交，已拒绝。可以改取一个更便宜（体量更小）的编号，或立即提交。"
+          }
+        ]
+      },
+      {
+        "admitted": false,
+        "denial_reason": "按当前实测耗时，这次调用无法在截止前再完成一次提交，已拒绝。可以改取一个更便宜（体量更小）的编号，或立即提交。",
+        "event_type": "tool",
+        "is_censored": false,
+        "sampled_duration_s": 7.141152600425548,
+        "step_index": 7,
+        "tool_arguments": {
+          "item_id": "K04"
+        },
+        "tool_name": "fetch",
+        "tool_start_offset_s": 126.69345429200621
+      },
+      {
+        "event_type": "forced_submit",
+        "offset_s": 126.69424608300324,
+        "remaining_s": 23.30575320799835,
+        "step_index": 8
+      }
+    ],
+    "final_answer": null,
+    "forced_submit": true,
+    "infrastructure_error_flags": [],
+    "metadata": {
+      "access": "OpenCode Go HTTP; no CLI",
+      "block_id": "dfefdae6a020fff6",
+      "budget_s": 150.0,
+      "condition": "E",
+      "config_hash": "e625fb76bdb5d5e4ef830c38dfb976806133b11e9c88fbd8041d8d4f646fd9a4",
+      "model_id": "deepseek-v4.1-flash",
+      "part": "A",
+      "position": 2,
+      "regime": "drift_heavy",
+      "repeat": 1,
+      "run_id": "73ef15b60ec26f92b3a23a96",
+      "sampler_seed": 211298183560543,
+      "task_family": "hetero",
+      "task_id": "test-hetero-07",
+      "template_id": "hetero-v7"
+    },
+    "sampler_draws": [
+      {
+        "draw": 1.965,
+        "item_id": "K03",
+        "mu": 4.34
+      },
+      {
+        "draw": 5.001,
+        "item_id": "K07",
+        "mu": 4.765
+      },
+      {
+        "draw": 5.052,
+        "item_id": "K10",
+        "mu": 5.449
+      },
+      {
+        "draw": 3.927,
+        "item_id": "K11",
+        "mu": 6.103
+      },
+      {
+        "draw": 6.617,
+        "item_id": "K14",
+        "mu": 7.012
+      },
+      {
+        "draw": 21.941,
+        "item_id": "K02",
+        "mu": 14.083
+      },
+      {
+        "draw": 12.913,
+        "item_id": "K08",
+        "mu": 17.593
+      },
+      {
+        "draw": 7.141,
+        "item_id": "K04",
+        "mu": 10.472
+      }
+    ],
+    "score": 24,
+    "service_error_flags": [],
+    "start_utc": "2026-11-03T17:01:57.101181+00:00",
+    "suspend_gap_s": 7.500129868276417e-07,
+    "termination_reason": "forced_submit",
+    "total_points": 54,
+    "valid_submission": true,
+    "verifier_details": {
+      "banked": 6,
+      "correct": false,
+      "score": 24,
+      "total": 54,
+      "wrong": 0
+    }
+  }
+}

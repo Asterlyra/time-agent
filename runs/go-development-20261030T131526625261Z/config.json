@@ -1,0 +1,137 @@
+{
+  "analysis": {
+    "bootstrap": "10000 task-cluster paired draws stratified by family",
+    "individual_intervals": "exploratory",
+    "models": "fixed equal weight",
+    "primary": "fast_to_slow C-B deadline success",
+    "seed": 911
+  },
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_s": 180.0,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.001189207999232,
+        2.0011469580003904,
+        2.0011350830000083
+      ],
+      "lookup_rows": [
+        2.001205042000038,
+        2.001197750000756,
+        2.001192415999867
+      ],
+      "read_document": [
+        2.001210667000123,
+        2.001207332999911,
+        2.0012052090005454
+      ],
+      "search": [
+        2.0012296659997446,
+        2.0012258329998076,
+        2.0012122079997425
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.001162167000075,
+        15.001156666000497,
+        15.001151915999799
+      ],
+      "lookup_rows": [
+        15.001166042000477,
+        15.00116429100035,
+        15.001163082999483
+      ],
+      "read_document": [
+        15.001160040999821,
+        15.00116587499997,
+        15.001165791999483
+      ],
+      "search": [
+        15.001142166000136,
+        15.001154582999334,
+        15.001156457999969
+      ]
+    }
+  },
+  "calibration_method": "three concurrent measurements per tool outside episodes",
+  "change_reason": "Register go_quality_v2 before complete development: calibration is a valid old-phase baseline; in-episode same-tool both-phase exposure is descriptive to avoid penalizing efficient search. Require actual new-phase feedback and subsequent valid decisions; require primary fast-to-slow outcome variability pooled per model. User-authorized concurrency is fixed at two workers per model, six total, preserving each paired ABC block on one worker. Retain 180-second budget and 12-second change point; no condition-effect optimization.",
+  "code_hash": "090eacc2f63e37daad91547a13791eb473862f309778289fd024d6198bbe0dd6",
+  "concurrency": {
+    "global": 6,
+    "per_model": 2
+  },
+  "fast_s": 2,
+  "limits": {
+    "max_reported_allowance_per_model": 3.0,
+    "max_requests_per_model": 2000
+  },
+  "manifest_hash": "b0a9ef4261e896afb380a2afcdd91e5a1c01b8df8434cb8fd708f7ba7db9b6c5",
+  "manifest_seed": 20261030,
+  "max_steps": 20,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast",
+    "fast_to_slow",
+    "slow_to_fast"
+  ],
+  "prompt": "You are participating in a local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"...\",\"arguments\":{...}} or {\"type\":\"submit\",\"answer\":{\"value\":number,\"evidence_ids\":[\"...\"]}}. Use only the experiment tools described in the observation, by requesting a JSON action; never execute tools yourself. The host executes them and returns results in history. Submit only when you have the required answer and evidence. There are no other resources or tools available. A duration reference is based on past observations and does not guarantee future duration. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution",
+  "purpose": "development only; no condition-effect inference",
+  "quality_policy": "go_quality_v2; both-phase same-tool observation descriptive; primary variability pooled by model",
+  "readiness_evidence": {
+    "diagnostic_batch": "/Users/atlas/Programs/codex_programs/time-agent/runs/go-diagnostic-20261030T124348352129Z",
+    "diagnostic_config_hash": "b446758cae35a569ec93059f6355f4b85f72c9e379edddc32cb8423b388de5f9",
+    "verification": {
+      "path": "/Users/atlas/Programs/codex_programs/time-agent/reports/go_verification-20261030T131356710171Z.json",
+      "sha256": "226d1e6859fad522a17d06798471ce486a26253bbcf9e56581193d467eed418d"
+    }
+  },
+  "shift_fraction": 0.06666666666666667,
+  "slow_s": 15,
+  "stage": "development",
+  "task_hash": "705a29cfa5bb6749f3b2e18d8574aad28df6b7ca9032f6fa391964757c797397",
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  },
+  "window": 3
+}

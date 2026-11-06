@@ -24,10 +24,13 @@ def load(batch):
     batch = Path(batch)
     config = json.loads((batch / 'config.json').read_text())
     records = []
+    episode_paths = sorted((batch / 'episodes').glob('*.json'))
+    episode_ids = {path.stem for path in episode_paths}
     archive = batch / 'environment_failures'
     if archive.exists():
         for path in sorted(archive.glob('*.json')):
-            if path.name == 'MANIFEST.json':
+            # A completed top-up supersedes the archived attempt for this run ID.
+            if path.name == 'MANIFEST.json' or path.stem in episode_ids:
                 continue
             row = json.loads(path.read_text())
             records.append({'model': row['manifest']['model_id'], 'task_id': row['manifest']['task_id'],
@@ -37,7 +40,7 @@ def load(batch):
                             'forced': False, 'denied': 0, 'banked': 0, 'archived': True,
                             'elapsed_s': row['result'].get('elapsed_s'),
                             'budget_s': row['manifest'].get('budget_s')})
-    for path in sorted((batch / 'episodes').glob('*.json')):
+    for path in episode_paths:
         row = json.loads(path.read_text())
         entry, result = row['manifest'], row['result']
         details = result.get('verifier_details') or {}
@@ -52,7 +55,19 @@ def load(batch):
                         'archived': bool(result.get('archived_interruption')),
                         'elapsed_s': result.get('elapsed_s'),
                         'budget_s': result.get('budget_s')})
-    return config, records
+    # A service error is the harness refusing to run the episode (the provider
+    # stopped billing it against the plan), not a decision the agent made. It
+    # carries no behaviour, so it is dropped rather than scored zero.
+    kept = [r for r in records if r['termination'] != 'service_error']
+    config['excluded_service_errors'] = len(records) - len(kept)
+    by_arm, all_arm = {}, {}
+    for r in records:
+        all_arm[r['arm']] = all_arm.get(r['arm'], 0) + 1
+        if r['termination'] == 'service_error':
+            by_arm[r['arm']] = by_arm.get(r['arm'], 0) + 1
+    config['service_error_by_arm'] = {a: by_arm.get(a, 0) / all_arm[a]
+                                      for a in all_arm if all_arm[a]}
+    return config, kept
 
 
 def _mean(values):
@@ -228,10 +243,18 @@ def main():
     summary = {'batch': str(args.batch), 'part': config.get('part'),
                'planned': len(manifest), 'n_episodes': len(records),
                'n_archived_environment_failures': sum(1 for r in records if r.get('archived')),
+               'excluded_service_errors': config.get('excluded_service_errors', 0),
+               'service_error_by_arm': config.get('service_error_by_arm', {}),
                'cells': {k: v for k, v in table.items()},
                'contrasts': contrasts, 'behaviour': behaviour(records), 'model_cells': model_cells(records),
                'sensitivity': sensitivity(records, draws=max(2000, args.draws // 5)),
-               'primary': primary}
+               'primary': primary,
+               'complete_block_primary': contrast(
+                   [r for r in records
+                    if len({q['arm'] for q in records
+                            if (q['model'], q['task_id'], q['regime']) ==
+                               (r['model'], r['task_id'], r['regime'])}) == len(ARMS)],
+                   'hetero', None, 'E', 'I0', draws=args.draws)}
     out = Path(args.out) if args.out else Path(args.batch) / 'stats_summary.json'
     out.write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({'primary': primary, 'out': str(out)}, ensure_ascii=False, indent=2))

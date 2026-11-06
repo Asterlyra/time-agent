@@ -34,7 +34,17 @@ class FakeProcess:
 class AdapterTests(unittest.IsolatedAsyncioTestCase):
     def adapter(self, process):
         async def factory(*args, **kwargs): return process
-        return CodexMXCV2(executable='fake', denied_roots=[str(Path.cwd())], process_factory=factory)
+        # These tests exercise event handling with a fake process, not Windows
+        # sandbox installation. Keep the production platform guard unchanged.
+        def fake_base_init(instance, *args, **kwargs):
+            instance.executable = 'fake'
+            instance.model = 'gpt-6-luna'
+            instance.denied_roots = [str(Path.cwd())]
+        with patch('src.adapters.codex_mxc_v2.CodexMXC.__init__', fake_base_init), \
+             patch.object(CodexMXCV2, '_sandbox_args', return_value=[]):
+            adapter = CodexMXCV2(executable='fake', denied_roots=[str(Path.cwd())], process_factory=factory)
+        adapter._sandbox_args = lambda root: []
+        return adapter
 
     def test_environment_does_not_pass_secrets(self):
         env = minimal_environment({'SystemRoot': 'sys', 'SystemDrive': 'drive', 'OPENAI_API_KEY': 'secret',

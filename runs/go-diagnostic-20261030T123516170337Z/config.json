@@ -1,0 +1,119 @@
+{
+  "base_url": "https://opencode.ai/inference/go",
+  "budget_s": 300,
+  "calibration": {
+    "fast": {
+      "calculate": [
+        2.001304791000166,
+        2.0012781660002474,
+        2.0012674170002356
+      ],
+      "lookup_rows": [
+        2.0013196250001783,
+        2.001312124999913,
+        2.001307291000103
+      ],
+      "read_document": [
+        2.0013235419996818,
+        2.001322000000073,
+        2.0013202909999563
+      ],
+      "search": [
+        2.0013355000000956,
+        2.0013317089997145,
+        2.001325249999809
+      ]
+    },
+    "slow": {
+      "calculate": [
+        15.001243665999937,
+        15.001238084000306,
+        15.001232874999914
+      ],
+      "lookup_rows": [
+        15.001247416999831,
+        15.00124549999964,
+        15.001244250000127
+      ],
+      "read_document": [
+        15.00124391700001,
+        15.001247416000297,
+        15.001247416999831
+      ],
+      "search": [
+        15.001231292000284,
+        15.001242625000032,
+        15.001243499999873
+      ]
+    }
+  },
+  "calibration_method": "three concurrent measurements per tool outside episodes",
+  "change_reason": "User authorized staged execution; initial three-model native HTTP diagnostic after 80 offline tests passed",
+  "code_hash": "efbe12de09a7079901ff0090ddb4d87230b57a275248110ecfbc98f145c73eae",
+  "concurrency": {
+    "global": 3,
+    "per_model": 1
+  },
+  "fast_s": 2,
+  "limits": {
+    "max_reported_allowance_per_model": 3.0,
+    "max_requests_per_model": 2000
+  },
+  "manifest_hash": "060fd0bfe16dddd36f9508304e85b3091604b9041e8843438eb5f5c872e25b80",
+  "manifest_seed": 20261030,
+  "max_steps": 20,
+  "max_tokens": 2048,
+  "model_settings": {
+    "max_tokens": 2048,
+    "reasoning": "provider default; not set",
+    "temperature": "provider default; not set"
+  },
+  "models": [
+    "glm-5.3-flash",
+    "qwen3.8-flash",
+    "deepseek-v4.1-flash"
+  ],
+  "profiles": [
+    "stable_fast"
+  ],
+  "prompt": "You are participating in a local decision experiment. Return exactly one JSON object as your final response. Choose either {\"type\":\"tool\",\"name\":\"...\",\"arguments\":{...}} or {\"type\":\"submit\",\"answer\":{\"value\":number,\"evidence_ids\":[\"...\"]}}. Use only the experiment tools described in the observation, by requesting a JSON action; never execute tools yourself. The host executes them and returns results in history. Submit only when you have the required answer and evidence. There are no other resources or tools available. A duration reference is based on past observations and does not guarantee future duration. Do not output explanations, Markdown or multiple actions.",
+  "protocol": "one text JSON action; no native/external tool execution",
+  "purpose": "development only; no condition-effect inference",
+  "shift_fraction": 0.2,
+  "slow_s": 15,
+  "stage": "diagnostic",
+  "task_hash": "39e306b936cd3790dd321326171d8368bdf9c5eea6a8aef8fc0c31b7a6a980e6",
+  "tool_schemas": {
+    "evidence": {
+      "read_document": {
+        "arguments": {
+          "id": "文档ID"
+        },
+        "description": "读取文档全文"
+      },
+      "search": {
+        "arguments": {
+          "query": "文档文本中的字符串"
+        },
+        "description": "搜索文档摘要，每次最多返回 5 条；可查询实体名，也可查询“档案”浏览档案摘要。摘要不包含档案全文；需用 read_document 读取详细内容。"
+      }
+    },
+    "table": {
+      "calculate": {
+        "arguments": {
+          "expression": "算式字符串"
+        },
+        "description": "计算仅含数字和 + - * / 的表达式"
+      },
+      "lookup_rows": {
+        "arguments": {
+          "cursor": "可选，默认为 0；后续页面使用上次返回的 next_cursor",
+          "filters": "字段与值组成的对象",
+          "table": "products 或 batches"
+        },
+        "description": "查询表格行，最多2行；空 filters 查询全部行（分页返回）。products 字段为 id, product, unit_cost, category；batches 字段为 id, product, quantity, status, discount, freight。 如 next_cursor 不为 null，使用同一 table 和 filters 并传入 cursor 获取下一页。"
+      }
+    }
+  },
+  "window": 3
+}
